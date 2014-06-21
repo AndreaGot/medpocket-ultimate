@@ -4,10 +4,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.*;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
 
 @SuppressWarnings("unused")
 public class DataBaseHelper extends SQLiteOpenHelper {
@@ -15,6 +20,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	// The Android's default system path of your application database.
 	private static String DB_PATH = "/data/data/it.scigot.medpocket/databases/";
 	private static String DB_NAME = "MedPocket.sqlite";
+	private static String TABELLA_FARMACI = "farmaci_a";
+	private static String TABELLA_FARMACIE = "farmacie_trento";
+	private static String TABELLA_CALENDARIO = "";
 	private SQLiteDatabase myDataBase;
 	private final Context myContext;
 
@@ -34,7 +42,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		String myPath = DB_PATH + DB_NAME;
 		myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
 	}
-	
+
 	public void openDataBaseReadWrite() throws SQLException {
 		// Open the database
 		String myPath = DB_PATH + DB_NAME;
@@ -129,6 +137,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myInput.close();
 	}
 
+	// Getting All Contacts
+	public ArrayList<HashMap<String, String>>  getAllFarmaciWhere(String campo, String valore) {
+		HashMap<String, String> farmaco = null;
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+		// Select All Query
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI + " WHERE denominazione LIKE '%" + valore + "%' OR principio_attivo LIKE '%" + valore + "%' ";
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				farmaco = new HashMap<String, String>();
+				farmaco.put("descr", cursor.getString(2));
+				farmaco.put("princ", cursor.getString(1));
+				list.add(farmaco);
+			} while (cursor.moveToNext());
+		}
+		else {
+			farmaco = new HashMap<String, String>();
+			farmaco.put("descr", "Nessun farmaco trovato!");
+			farmaco.put("princ", "Per favore, riprova!");
+			list.add(farmaco);
+		}
+
+		// return contact list
+		return list;
+	}
 	// Add your public helper methods to access and get content from the
 	// database.
 	// You could return cursors by doing "return myDataBase.query(....)" so it'd

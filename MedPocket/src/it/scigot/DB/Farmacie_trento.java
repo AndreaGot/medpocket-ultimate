@@ -11,17 +11,17 @@ public class Farmacie_trento {
 	private String latitudine;
 	private String longitudine;
 
-	public Farmacie_trento(int _id, String indirizzo, String nome, int cap, String comune, String frazione, String latitudine, String longitudine) {
-		super();
-		this.set_id(_id);
-		this.setIndirizzo(indirizzo);
-		this.setNome(nome);
-		this.setCap(cap);
-		this.setComune(comune);
-		this.setFrazione(frazione);
-		this.setLatitudine(latitudine);
-		this.setLongitudine(longitudine);
-	}
+//	public Farmacie_trento(int _id, String indirizzo, String nome, int cap, String comune, String frazione, String latitudine, String longitudine) {
+//		super();
+//		this.set_id(_id);
+//		this.setIndirizzo(indirizzo);
+//		this.setNome(nome);
+//		this.setCap(cap);
+//		this.setComune(comune);
+//		this.setFrazione(frazione);
+//		this.setLatitudine(latitudine);
+//		this.setLongitudine(longitudine);
+//	}
 
 	public String getIndirizzo() {
 		return indirizzo;

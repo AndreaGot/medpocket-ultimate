@@ -8,16 +8,14 @@ public class Farmaci_a {
 	private String prezzo;
 	private String ditta;
 
-	public Farmaci_a(int _id, String principio_attivo, String denominazione, String prezzo, String ditta) {
-
-		super();
-		this.set_id(_id);
-		this.setPrincipio_attivo(principio_attivo);
-		this.setDenominazione(denominazione);
-		this.setPrezzo(prezzo);
-		this.setDitta(ditta);
-
-	}
+//	public Farmaci_a(int _id, String principio_attivo, String denominazione, String prezzo, String ditta) {
+//		super();
+//		this.set_id(_id);
+//		this.setPrincipio_attivo(principio_attivo);
+//		this.setDenominazione(denominazione);
+//		this.setPrezzo(prezzo);
+//		this.setDitta(ditta);
+//	}
 
 	public int get_id() {
 		return _id;
