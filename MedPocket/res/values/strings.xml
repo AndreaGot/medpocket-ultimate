@@ -2,36 +2,21 @@
 <resources>
 
     <string name="app_name">MedPocket</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
     <string name="action_settings">Settings</string>
     <string name="body1">Scheda Armadietto</string>
     <string name="body2">Scheda Trova</string>
     <string name="body3">Scheda Converti</string>
     <string name="body4">Scheda Promemoria</string>
-    <string name="label1">Armadietto</string>
-    <string name="label2">Trova</string>
-    <string name="label3">Converti</string>
-    <string name="label4">Promemoria</string>
+    <string name="armadietto">Armadietto</string>
+    <string name="trova">Trova</string>
+    <string name="converti">Converti</string>
+    <string name="promemoria">Promemoria</string>
 
-    <string-array name="desserts">
-        <item>Cupcake</item>
-        <item>Donut</item>
-        <item>Eclair</item>
-        <item>Froyo</item>
-        <item>Gingerbread</item>
-        <item>Honeycomb</item>
-        <item>Ice Cream Sandwich</item>
-        <item>Jelly Bean</item>
-        <item>Key Lime Pie</item>
-    </string-array>
-
-    <string name="title_activity_detail_armadietto">DetailArmadietto</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_detail_convertitore">DetailConvertitore</string>
-    <string name="title_activity_detail_promemoria">DetailPromemoria</string>
-    <string name="title_activity_detail_trova_farmacie">DetailTrovaFarmacie</string>
+    <string name="title_activity_detail_armadietto">Armadietto</string>
+    <string name="title_activity_detail_convertitore">Convertitore</string>
+    <string name="title_activity_detail_promemoria">Promemoria</string>
+    <string name="title_activity_detail_trova_farmacie">Trova Farmacie</string>
+    
     <string name="InserisciFarmaco">Inserisci farmaco</string>
 
 </resources>

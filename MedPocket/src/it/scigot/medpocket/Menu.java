@@ -217,16 +217,16 @@ public class Menu extends FragmentActivity implements ActionBar.TabListener {
 			String tabLabel = null;
 			switch (position) {
 			case 0:
-				tabLabel = getString(R.string.label1);
+				tabLabel = getString(R.string.armadietto);
 				break;
 			case 1:
-				tabLabel = getString(R.string.label2);
+				tabLabel = getString(R.string.trova);
 				break;
 			case 2:
-				tabLabel = getString(R.string.label3);
+				tabLabel = getString(R.string.converti);
 				break;
 			case 3:
-				tabLabel = getString(R.string.label4);
+				tabLabel = getString(R.string.promemoria);
 				break;
 			}
 			return tabLabel;
