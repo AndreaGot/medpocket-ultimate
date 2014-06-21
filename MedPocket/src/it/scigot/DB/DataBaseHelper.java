@@ -1,4 +1,4 @@
-package it.scigot.medpocket;
+package it.scigot.DB;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -150,5 +150,11 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         // Add your public helper methods to access and get content from the database.
        // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
        // to you to create adapters for your views.
+	
+	
+	
+	
+	
+	
 	
 }
