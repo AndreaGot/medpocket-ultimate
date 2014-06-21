@@ -32,5 +32,6 @@
     <string name="title_activity_detail_convertitore">DetailConvertitore</string>
     <string name="title_activity_detail_promemoria">DetailPromemoria</string>
     <string name="title_activity_detail_trova_farmacie">DetailTrovaFarmacie</string>
+    <string name="InserisciFarmaco">Inserisci il nome di un farmaco</string>
 
 </resources>

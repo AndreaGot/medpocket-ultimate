@@ -6,11 +6,29 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="it.scigot.medpocket.DetailConvertitore">
+    tools:context="it.scigot.medpocket.DetailConvertitore" >
 
-    <TextView
+    <ListView
+        android:id="@+id/lstFarmaci"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editText1" >
+
+    </ListView>
+
+    <EditText
+        android:id="@+id/editText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Convertitore" />
+        android:layout_alignLeft="@+id/lstFarmaci"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/lstFarmaci"
+        android:ems="10"
+        android:hint="@string/InserisciFarmaco" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>
