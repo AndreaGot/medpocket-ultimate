@@ -304,6 +304,8 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 
 		@Override
 		public void onClick(View view) {
+			
+			//TODO: fare in modo che, se la finestra contiene eventi, si apra la finestrella che li elenca.
 			String date_month_year = (String) view.getTag();
 			selectedDayMonthYearButton.setText("Selected: " + date_month_year);
 			try {
