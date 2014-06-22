@@ -249,7 +249,9 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		 */
 		private HashMap<String, Integer> findNumberOfEventsPerMonth(int year, int month) {
 			HashMap<String, Integer> map = new HashMap<String, Integer>();
-
+			map.put("18", 0);
+			map.put("28", 0);
+			//TODO nella string va il giorno, mentre nell'Integer va un valore che verrà scritto (metto 0 per riconoscere un giorno che presenta eventi)
 			return map;
 		}
 
