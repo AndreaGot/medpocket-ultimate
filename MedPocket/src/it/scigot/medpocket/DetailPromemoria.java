@@ -9,10 +9,12 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 	private Button selectedDayMonthYearButton;
 	private ImageView prevMonth;
 	private ImageView nextMonth;
+	private Button add_event;
 	private GridView calendarView;
 	private GridCellAdapter adapter;
 	private Calendar _calendar;
@@ -69,6 +72,20 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		adapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
 		adapter.notifyDataSetChanged();
 		calendarView.setAdapter(adapter);
+		
+		
+		add_event = (Button) this.findViewById(R.id.add_event);
+		add_event.setText("Aggiungi Promemoria");
+		add_event.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+				Intent i = new Intent(arg0.getContext(), AddEvent.class);
+				startActivity(i);
+				
+			}
+		});
 	}
 
 	/**

@@ -82,8 +82,15 @@
     <GridView
         android:id="@+id/calendar"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="239dp"
+        android:layout_weight="0.56"
         android:numColumns="7" >
     </GridView>
+
+    <Button
+        android:id="@+id/add_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Aggiungi" />
 
 </LinearLayout>

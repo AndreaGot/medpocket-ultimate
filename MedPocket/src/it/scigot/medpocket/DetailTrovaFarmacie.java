@@ -11,25 +11,33 @@ import com.google.android.gms.maps.model.*;
 public class DetailTrovaFarmacie extends FragmentActivity {
 
 	
-	@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_trova_farmacie);
+	
+private GoogleMap mMap;
 
-        // Get a handle to the Map Fragment
-        GoogleMap map = ((MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map)).getMap();
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_detail_trova_farmacie);
+    setUpMapIfNeeded();
+}
 
-        LatLng sydney = new LatLng(-33.867, 151.206);
+@Override
+protected void onResume() {
+    super.onResume();
+    setUpMapIfNeeded();
+}
 
-        map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-
-        map.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(sydney));
+private void setUpMapIfNeeded() {
+    if (mMap != null) {
+        return;
     }
+    mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+    if (mMap == null) {
+        return;
+    }
+    // Initialize map options. For example:
+    // mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+}
 	
 	
 //	@Override
@@ -40,7 +48,7 @@ public class DetailTrovaFarmacie extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+//		 Inflate the menu; this adds items to the action bar if it is present. NON TOGLIERE IL COMMENTO
 		getMenuInflater().inflate(R.menu.detail_trova_farmacie, menu);
 		return true;
 	}
