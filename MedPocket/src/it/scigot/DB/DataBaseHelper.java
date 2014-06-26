@@ -20,9 +20,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	// The Android's default system path of your application database.
 	private static String DB_PATH = "/data/data/it.scigot.medpocket/databases/";
 	private static String DB_NAME = "MedPocket.sqlite";
-	private static String TABELLA_FARMACI = "farmaci_a";
-	private static String TABELLA_FARMACIE = "farmacie_trento";
-	private static String TABELLA_CALENDARIO = "";
+	private final static String TABELLA_FARMACI = "farmaci_a";
+	private final static String TABELLA_FARMACIE = "farmacie_trento";
+	private final static String TABELLA_CALENDARIO = "evento";
 	private SQLiteDatabase myDataBase;
 	private final Context myContext;
 
@@ -160,10 +160,42 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			farmaco.put("princ", "Per favore, riprova!");
 			list.add(farmaco);
 		}
-
+		cursor.close();
 		// return contact list
 		return list;
 	}
+	
+	public HashMap<Integer, String> getFarmaciMap() {
+		HashMap<Integer, String> farmaci = new HashMap<Integer, String>();
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI;
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				farmaci.put(cursor.getInt(0), cursor.getString(2));	
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		return farmaci;
+	}
+	
+	public ArrayList<String> getNomiFarmaci() {
+		ArrayList<String> farmaci = new ArrayList<String>();
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI;
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				farmaci.add(cursor.getString(2));	
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		return farmaci;
+	}
+	
+	
 	// Add your public helper methods to access and get content from the
 	// database.
 	// You could return cursors by doing "return myDataBase.query(....)" so it'd
