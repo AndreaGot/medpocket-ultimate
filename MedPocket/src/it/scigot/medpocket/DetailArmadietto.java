@@ -12,6 +12,7 @@ public class DetailArmadietto extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_armadietto);
+        setTitle("Armadietto Farmaci");
     }
 
 

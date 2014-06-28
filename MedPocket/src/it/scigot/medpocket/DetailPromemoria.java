@@ -16,8 +16,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +58,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle("Promemoria Farmaci");
 		setContentView(R.layout.activity_detail_promemoria);
 		db = new DataBaseHelper(this);
 
@@ -310,6 +313,9 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 					num_events_per_day = (TextView) row.findViewById(R.id.num_events_per_day);
 					Integer numEvents = (Integer) eventsPerMonthMap.get(theday);
 					num_events_per_day.setText(numEvents.toString());
+					num_events_per_day.setBackgroundResource(R.drawable.oval);
+					num_events_per_day.setTextColor(Color.RED);
+					num_events_per_day.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 				}
 			}
 

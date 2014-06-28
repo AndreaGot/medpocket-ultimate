@@ -33,6 +33,7 @@ public class DetailConvertitore extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_convertitore);
+        setTitle("Convertitore Farmaci");
 		txtFarmaci = (EditText) findViewById(R.id.txtFarmaci);
 		lstFarmaci = (ListView) findViewById(R.id.lstFarmaci);
 		btnVai = (Button) findViewById(R.id.btnVai);

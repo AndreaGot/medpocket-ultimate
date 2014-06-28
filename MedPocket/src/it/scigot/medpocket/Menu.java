@@ -42,6 +42,7 @@ public class Menu extends FragmentActivity implements ActionBar.TabListener {
 		checkDBExistence();
 		
 		setContentView(R.layout.activity_menu);
+        setTitle("MedPocket");
 		// Create an adapter that when requested, will return a fragment
 		// representing an object in
 		// the collection.

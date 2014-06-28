@@ -43,6 +43,7 @@ public class AddEvent extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_event);
+		setTitle("Aggiungi Evento");
 		db = new DataBaseHelper(this);
 
 		nomiFarmaci = db.getNomiFarmaci();
