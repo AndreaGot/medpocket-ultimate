@@ -1,19 +1,20 @@
 package it.scigot.medpocket;
 
-import java.text.ParseException;
+import it.scigot.DB.DataBaseHelper;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -21,10 +22,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class DetailPromemoria extends Activity implements OnClickListener {
@@ -34,6 +37,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 	private ImageView prevMonth;
 	private ImageView nextMonth;
 	private Button add_event;
+	private Button settings;
 	private GridView calendarView;
 	private GridCellAdapter adapter;
 	private Calendar _calendar;
@@ -42,29 +46,60 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 	@SuppressLint({ "NewApi", "NewApi", "NewApi", "NewApi" })
 	private final DateFormat dateFormatter = new DateFormat();
 	private static final String dateTemplate = "MMMM yyyy";
+	final Context context = this;
+
+	private DataBaseHelper db = null;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_promemoria);
+		db = new DataBaseHelper(this);
+		settings = (Button) findViewById(R.id.settings);
+		settings.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View arg0) {
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
-		
-		add_event = (Button) findViewById(R.id.add_event);
-		add_event.setText("Aggiungi Promemoria");
-        add_event.setOnClickListener(new View.OnClickListener() {
+				// set title
+				alertDialogBuilder.setTitle("Your Title");
+
+				// set dialog message
+				alertDialogBuilder.setMessage("Click yes to exit!").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+
+					}
+				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// if this button is clicked, just close
+						// the dialog box and do nothing
+						dialog.cancel();
+					}
+				});
+
+				// create alert dialog
+				AlertDialog alertDialog = alertDialogBuilder.create();
+
+				// show it
+				alertDialog.show();
+			}
+		});
+
+		add_event = (Button) findViewById(R.id.addEvent);
+		add_event.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				Intent i = new Intent(arg0.getContext(), AddEvent.class);
 				startActivity(i);
 			}
-        });
-		
+		});
+
 		_calendar = Calendar.getInstance(Locale.getDefault());
 		month = _calendar.get(Calendar.MONTH) + 1;
 		year = _calendar.get(Calendar.YEAR);
 
-//		selectedDayMonthYearButton = (Button) this.findViewById(R.id.selectedDayMonthYear);
-//		selectedDayMonthYearButton.setText("Selected: ");
+		// selectedDayMonthYearButton = (Button)
+		// this.findViewById(R.id.selectedDayMonthYear);
+		// selectedDayMonthYearButton.setText("Selected: ");
 
 		prevMonth = (ImageView) this.findViewById(R.id.prevMonth);
 		prevMonth.setOnClickListener(this);
@@ -81,7 +116,6 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		adapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
 		adapter.notifyDataSetChanged();
 		calendarView.setAdapter(adapter);
-		
 
 	}
 
@@ -134,7 +168,8 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		private final List<String> list;
 		private static final int DAY_OFFSET = 1;
 		private final String[] weekdays = new String[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-		private final String[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+		private final String[] months_old = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+		private final String[] months = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
 		private final int[] daysOfMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		private int daysInMonth;
 		private int currentDayOfMonth;
@@ -142,7 +177,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		private Button gridcell;
 		private TextView num_events_per_day;
 		private final HashMap<String, Integer> eventsPerMonthMap;
-		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy");
+		private final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
 		// Days in Current Month
 		public GridCellAdapter(Context context, int textViewResourceId, int month, int year) {
@@ -262,11 +297,13 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		 * @return
 		 */
 		private HashMap<String, Integer> findNumberOfEventsPerMonth(int year, int month) {
-			HashMap<String, Integer> map = new HashMap<String, Integer>();
-			map.put("18", 0);
-			map.put("28", 0);
-			//TODO nella string va il giorno, mentre nell'Integer va un valore che verrà scritto (metto 0 per riconoscere un giorno che presenta eventi)
-			return map;
+//			HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+			// TODO nella string va il giorno, mentre nell'Integer va un valore
+			// che verrà scritto (metto 0 per riconoscere un giorno che presenta
+			// eventi)
+			return db.findEventsByMonth(year, month);
+			
 		}
 
 		@Override
@@ -318,16 +355,56 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 
 		@Override
 		public void onClick(View view) {
-			
-			//TODO: fare in modo che, se la finestra contiene eventi, si apra la finestrella che li elenca.
-			String date_month_year = (String) view.getTag();
-			selectedDayMonthYearButton.setText("Selected: " + date_month_year);
-			try {
-				Date parsedDate = dateFormatter.parse(date_month_year);
 
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			// TODO: fare in modo che, se la finestra contiene eventi, si apra
+			// la finestrella che li elenca.
+			String date_month_year = (String) view.getTag();
+			// // selectedDayMonthYearButton.setText("Selected: " +
+			// date_month_year);
+			// try {
+			//
+			// } catch (ParseException e) {
+			// e.printStackTrace();
+			// }
+
+			AlertDialog.Builder builderSingle = new AlertDialog.Builder(DetailPromemoria.this);
+			builderSingle.setIcon(R.drawable.ic_launcher);
+			builderSingle.setTitle("Eventi del giorno:");
+
+			ArrayList<HashMap<String, String>> datiEvento = db.getAllEventiWhere(date_month_year);
+			final String[] from = { "descr", "sotto" };
+			final int[] toLayoutId = new int[] { android.R.id.text1, android.R.id.text2 };
+			SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), datiEvento, android.R.layout.simple_list_item_2, from, toLayoutId);
+
+			builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+
+			builderSingle.setAdapter(adapter, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// String strName = adapter.getItem(which);
+					// AlertDialog.Builder builderInner = new
+					// AlertDialog.Builder(DetailPromemoria.this);
+					// builderInner.setMessage(strName);
+					// builderInner.setTitle("Your Selected Item is");
+					// builderInner.setPositiveButton("Ok", new
+					// DialogInterface.OnClickListener() {
+					//
+					// @Override
+					// public void onClick(DialogInterface dialog, int which) {
+					// dialog.dismiss();
+					// }
+					// });
+					// builderInner.show();
+				}
+			});
+			builderSingle.show();
 		}
 
 		public int getCurrentDayOfMonth() {

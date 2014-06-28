@@ -4,9 +4,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -137,8 +141,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myInput.close();
 	}
 
-	// Getting All Contacts
-	public ArrayList<HashMap<String, String>>  getAllFarmaciWhere(String campo, String valore) {
+
+	public ArrayList<HashMap<String, String>> getAllFarmaciWhere(String campo, String valore) {
 		HashMap<String, String> farmaco = null;
 		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 		// Select All Query
@@ -153,33 +157,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 				farmaco.put("princ", cursor.getString(1));
 				list.add(farmaco);
 			} while (cursor.moveToNext());
-		}
-		else {
+		} else {
 			farmaco = new HashMap<String, String>();
 			farmaco.put("descr", "Nessun farmaco trovato!");
 			farmaco.put("princ", "Per favore, riprova!");
 			list.add(farmaco);
 		}
 		cursor.close();
-		// return contact list
+		myDataBase.close();
 		return list;
 	}
-	
-	public HashMap<Integer, String> getFarmaciMap() {
-		HashMap<Integer, String> farmaci = new HashMap<Integer, String>();
+
+	public HashMap<String, Integer> getFarmaciMap() {
+		HashMap<String, Integer> farmaci = new HashMap<String, Integer>();
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI;
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			do {
-				farmaci.put(cursor.getInt(0), cursor.getString(2));	
+				farmaci.put(cursor.getString(2), cursor.getInt(0));
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
+		myDataBase.close();
 		return farmaci;
 	}
-	
+
 	public ArrayList<String> getNomiFarmaci() {
 		ArrayList<String> farmaci = new ArrayList<String>();
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI;
@@ -188,17 +192,138 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			do {
-				farmaci.add(cursor.getString(2));	
+				farmaci.add(cursor.getString(2));
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
 		return farmaci;
 	}
+
+	public boolean addSingleEvent(String nome, String data, String ora, Integer idMedicina) {
+		openDataBaseReadWrite();
+		ContentValues insertValues = new ContentValues();
+		insertValues.put("nome", nome);
+		insertValues.put("data", data);
+		insertValues.put("ora", ora);
+		insertValues.put("medicinale", idMedicina);
+		if (myDataBase.insert("Evento", null, insertValues) != -1) {
+			System.out.println("INSERITO");
+			myDataBase.close();
+			return true;
+		} else {
+			System.err.println("ERRORE");
+			myDataBase.close();
+			return false;
+		}
+		
+
+	}
+
+	public Integer addEvents(String nome, String data, String ora, Integer idMedicina, Integer ripetizione, String step, String oreDist) {
+		Integer interval = 0;
+		Calendar cal = setCustomDateAndTime(data, ora);
+		;
+		Date singleDate = null;
+		String stringDate = "";
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat hf = new SimpleDateFormat("HH:mm");
+		singleDate = cal.getTime();
+		if (ripetizione == 0) {
+			stringDate = df.format(singleDate);
+			String stringHour = hf.format(singleDate);
+			addSingleEvent(nome, stringDate, stringHour, idMedicina);
+			for (Integer i = 0; i < Integer.parseInt(step) - 1; i++) {
+				cal.add(Calendar.HOUR_OF_DAY, Integer.parseInt(oreDist));
+				singleDate = cal.getTime();
+				stringDate = df.format(singleDate);
+				stringHour = hf.format(singleDate);
+				addSingleEvent(nome, stringDate, stringHour, idMedicina);
+			}
+		} else {
+
+			stringDate = df.format(singleDate);
+			addSingleEvent(nome, stringDate, ora, idMedicina);
+			for (Integer i = 0; i < Integer.parseInt(step) - 1; i++) {
+				cal.add(Calendar.DAY_OF_MONTH, ripetizione);
+				singleDate = cal.getTime();
+				stringDate = df.format(singleDate);
+				addSingleEvent(nome, stringDate, ora, idMedicina);
+			}
+
+		}
+		return Integer.parseInt(step);
+	}
+
+	private Calendar setCustomDateAndTime(String data, String ora) {
+		String[] dataPart = data.split("-");
+		String[] oraPart = ora.split(":");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(dataPart[2]));
+		// i mesi vanno ridotti di 1 (0 è gennaio)
+		cal.set(Calendar.MONTH, Integer.parseInt(dataPart[1]) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dataPart[0]));
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(oraPart[0]));
+		cal.set(Calendar.MINUTE, Integer.parseInt(oraPart[1]));
+		return cal;
+	}
+
+	public HashMap<String, Integer> findEventsByMonth(int year, int month) {
+		HashMap<String, Integer> result = new HashMap<String, Integer>();
+		String stringMonth = null;
+		if (month < 10) {
+			stringMonth = "0" + String.valueOf(month);
+		} else {
+			stringMonth = String.valueOf(month);
+		}
+		String data = "%-" + stringMonth + "-" + String.valueOf(year);
+		String selectQuery = "SELECT * FROM " + TABELLA_CALENDARIO + " WHERE data LIKE '" + data + "'";
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				String[] dataPart = cursor.getString(2).split("-");
+				dataPart[0] = dataPart[0].startsWith("0") ? dataPart[0].substring(1) : dataPart[0];
+				if (result.containsKey(dataPart[0])) {
+					result.put(dataPart[0], result.get(dataPart[0]) + 1);
+				} else {
+					result.put(dataPart[0], 1);
+				}
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		myDataBase.close();
+		return result;
+	}
 	
+	// Getting All Contacts
+	public ArrayList<HashMap<String, String>> getAllEventiWhere(String data) {
+		HashMap<String, String> evento = null;
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+		if(data.indexOf("-") == 1) {
+			data = "0" + data;
+		}
+		String selectQuery = "SELECT  * FROM " + TABELLA_CALENDARIO + " WHERE data LIKE '" + data + "' ";
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				evento = new HashMap<String, String>();
+				evento.put("descr", cursor.getString(1));
+				String sotto = cursor.getString(3) + " " + cursor.getString(4);
+				evento.put("sotto", sotto);
+				list.add(evento);
+			} while (cursor.moveToNext());
+		} else {
+			evento = new HashMap<String, String>();
+			evento.put("descr", "Nessun evento trovato!");
+			evento.put("sotto", "Per favore, riprova!");
+			list.add(evento);
+		}
+		cursor.close();
+		myDataBase.close();
+		return list;
+	}
 	
-	// Add your public helper methods to access and get content from the
-	// database.
-	// You could return cursors by doing "return myDataBase.query(....)" so it'd
-	// be easy
-	// to you to create adapters for your views.
 }
