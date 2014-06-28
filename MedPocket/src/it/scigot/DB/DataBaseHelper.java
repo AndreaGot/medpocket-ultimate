@@ -141,7 +141,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myInput.close();
 	}
 
-
 	public ArrayList<HashMap<String, String>> getAllFarmaciWhere(String campo, String valore) {
 		HashMap<String, String> farmaco = null;
 		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
@@ -184,6 +183,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return farmaci;
 	}
 
+	public HashMap<Integer, String> getFarmaciMapWithIntegerKey() {
+		HashMap<Integer, String> farmaci = new HashMap<Integer, String>();
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI;
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				farmaci.put(cursor.getInt(0), cursor.getString(2));
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		myDataBase.close();
+		return farmaci;
+	}
+
 	public ArrayList<String> getNomiFarmaci() {
 		ArrayList<String> farmaci = new ArrayList<String>();
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI;
@@ -197,6 +212,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 		cursor.close();
 		return farmaci;
+	}
+
+	public Integer getNomiFarmaci(String nome) {
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI + " WHERE denominazione LIKE '%" + nome + "%'";
+		Integer result = -1;
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			result = cursor.getInt(0);
+		}
+		cursor.close();
+		myDataBase.close();
+		return result;
 	}
 
 	public boolean addSingleEvent(String nome, String data, String ora, Integer idMedicina) {
@@ -215,7 +244,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			myDataBase.close();
 			return false;
 		}
-		
 
 	}
 
@@ -295,23 +323,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myDataBase.close();
 		return result;
 	}
-	
+
 	// Getting All Contacts
 	public ArrayList<HashMap<String, String>> getAllEventiWhere(String data) {
 		HashMap<String, String> evento = null;
 		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
-		if(data.indexOf("-") == 1) {
+		if (data.indexOf("-") == 1) {
 			data = "0" + data;
 		}
 		String selectQuery = "SELECT  * FROM " + TABELLA_CALENDARIO + " WHERE data LIKE '" + data + "' ";
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
+		HashMap<Integer, String> farmaciMap = this.getFarmaciMapWithIntegerKey();
 		if (cursor.moveToFirst()) {
 			do {
 				evento = new HashMap<String, String>();
 				evento.put("descr", cursor.getString(1));
-				String sotto = cursor.getString(3) + " " + cursor.getString(4);
+				String sotto = cursor.getString(3) + " " + farmaciMap.get(Integer.parseInt(cursor.getString(4)));
 				evento.put("sotto", sotto);
 				list.add(evento);
 			} while (cursor.moveToNext());
@@ -325,5 +354,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myDataBase.close();
 		return list;
 	}
-	
+
+	public Boolean deleteEvent(String data, String valore) {
+		String ora = valore.substring(0, 5);
+		if (data.indexOf("-") == 1) {
+			data = "0" + data;
+		}
+		String farmaco = valore.substring(5).trim();
+		Integer idFarmaco = this.getNomiFarmaci(farmaco);
+		openDataBaseReadWrite();
+		if (myDataBase.delete(TABELLA_CALENDARIO, "data " + " LIKE '" + data + "' AND ora LIKE '" + ora + "' AND medicinale=" + String.valueOf(idFarmaco), null) > 0) {
+			System.out.println("ELIMINATO");
+			return true;
+		} else {
+			System.err.println("ERRORE");
+			return false;
+		}
+	}
 }

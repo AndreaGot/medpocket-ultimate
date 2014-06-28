@@ -56,31 +56,22 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_promemoria);
 		db = new DataBaseHelper(this);
+
 		settings = (Button) findViewById(R.id.settings);
 		settings.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
+
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-
-				// set title
 				alertDialogBuilder.setTitle("Your Title");
-
-				// set dialog message
 				alertDialogBuilder.setMessage("Click yes to exit!").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-
 					}
 				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						// if this button is clicked, just close
-						// the dialog box and do nothing
 						dialog.cancel();
 					}
 				});
-
-				// create alert dialog
 				AlertDialog alertDialog = alertDialogBuilder.create();
-
-				// show it
 				alertDialog.show();
 			}
 		});
@@ -96,10 +87,6 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		_calendar = Calendar.getInstance(Locale.getDefault());
 		month = _calendar.get(Calendar.MONTH) + 1;
 		year = _calendar.get(Calendar.YEAR);
-
-		// selectedDayMonthYearButton = (Button)
-		// this.findViewById(R.id.selectedDayMonthYear);
-		// selectedDayMonthYearButton.setText("Selected: ");
 
 		prevMonth = (ImageView) this.findViewById(R.id.prevMonth);
 		prevMonth.setOnClickListener(this);
@@ -119,11 +106,6 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 
 	}
 
-	/**
-	 * 
-	 * @param month
-	 * @param year
-	 */
 	private void setGridCellAdapterToDate(int month, int year) {
 		adapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
 		_calendar.set(year, month - 1, _calendar.get(Calendar.DAY_OF_MONTH));
@@ -169,7 +151,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		private static final int DAY_OFFSET = 1;
 		private final String[] weekdays = new String[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 		private final String[] months_old = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-		private final String[] months = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+		private final String[] months = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };
 		private final int[] daysOfMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		private int daysInMonth;
 		private int currentDayOfMonth;
@@ -286,24 +268,8 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 			}
 		}
 
-		/**
-		 * NOTE: YOU NEED TO IMPLEMENT THIS PART Given the YEAR, MONTH, retrieve
-		 * ALL entries from a SQLite database for that month. Iterate over the
-		 * List of All entries, and get the dateCreated, which is converted into
-		 * day.
-		 * 
-		 * @param year
-		 * @param month
-		 * @return
-		 */
 		private HashMap<String, Integer> findNumberOfEventsPerMonth(int year, int month) {
-//			HashMap<String, Integer> map = new HashMap<String, Integer>();
-
-			// TODO nella string va il giorno, mentre nell'Integer va un valore
-			// che verrà scritto (metto 0 per riconoscere un giorno che presenta
-			// eventi)
 			return db.findEventsByMonth(year, month);
-			
 		}
 
 		@Override
@@ -355,18 +321,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 
 		@Override
 		public void onClick(View view) {
-
-			// TODO: fare in modo che, se la finestra contiene eventi, si apra
-			// la finestrella che li elenca.
-			String date_month_year = (String) view.getTag();
-			// // selectedDayMonthYearButton.setText("Selected: " +
-			// date_month_year);
-			// try {
-			//
-			// } catch (ParseException e) {
-			// e.printStackTrace();
-			// }
-
+			final String date_month_year = (String) view.getTag();
 			AlertDialog.Builder builderSingle = new AlertDialog.Builder(DetailPromemoria.this);
 			builderSingle.setIcon(R.drawable.ic_launcher);
 			builderSingle.setTitle("Eventi del giorno:");
@@ -374,7 +329,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 			ArrayList<HashMap<String, String>> datiEvento = db.getAllEventiWhere(date_month_year);
 			final String[] from = { "descr", "sotto" };
 			final int[] toLayoutId = new int[] { android.R.id.text1, android.R.id.text2 };
-			SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), datiEvento, android.R.layout.simple_list_item_2, from, toLayoutId);
+			final SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), datiEvento, android.R.layout.simple_list_item_2, from, toLayoutId);
 
 			builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
@@ -388,20 +343,30 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// String strName = adapter.getItem(which);
-					// AlertDialog.Builder builderInner = new
-					// AlertDialog.Builder(DetailPromemoria.this);
-					// builderInner.setMessage(strName);
-					// builderInner.setTitle("Your Selected Item is");
-					// builderInner.setPositiveButton("Ok", new
-					// DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog, int which) {
-					// dialog.dismiss();
-					// }
-					// });
-					// builderInner.show();
+					final HashMap<String, String> value = (HashMap<String, String>) adapter.getItem(which);
+					System.out.println("ciao");
+					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+					// set title
+					alertDialogBuilder.setTitle("Elimina");
+
+					// set dialog message
+					alertDialogBuilder.setMessage("Vuoi eliminare l'evento?").setCancelable(true).setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+
+							db.deleteEvent(date_month_year, value.get("sotto"));
+							System.out.println("ciao");
+						}
+					}).setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+					// create alert dialog
+					AlertDialog alertDialog = alertDialogBuilder.create();
+					// show it
+					alertDialog.show();
+
 				}
 			});
 			builderSingle.show();
