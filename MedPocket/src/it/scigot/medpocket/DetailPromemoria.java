@@ -19,16 +19,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailPromemoria extends Activity implements OnClickListener {
 
@@ -59,20 +61,27 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 
 		settings = (Button) findViewById(R.id.settings);
 		settings.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View arg0) {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showPopupMenu(v);
+			}
 
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-				alertDialogBuilder.setTitle("Your Title");
-				alertDialogBuilder.setMessage("Click yes to exit!").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-					}
-				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
+			private void showPopupMenu(View v) {
+				PopupMenu popupMenu = new PopupMenu(DetailPromemoria.this, v);
+				popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+				popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						Toast.makeText(DetailPromemoria.this, item.toString(), Toast.LENGTH_LONG).show();
+						onCreate(null);
+						return true;
 					}
 				});
-				AlertDialog alertDialog = alertDialogBuilder.create();
-				alertDialog.show();
+
+				popupMenu.show();
 			}
 		});
 
@@ -81,6 +90,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 			public void onClick(View arg0) {
 				Intent i = new Intent(arg0.getContext(), AddEvent.class);
 				startActivity(i);
+				onCreate(null);
 			}
 		});
 
@@ -370,6 +380,8 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 				}
 			});
 			builderSingle.show();
+
+			onCreate(null);
 		}
 
 		public int getCurrentDayOfMonth() {

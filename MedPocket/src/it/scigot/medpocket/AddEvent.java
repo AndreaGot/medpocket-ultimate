@@ -150,6 +150,8 @@ public class AddEvent extends Activity {
 				if (righe >0) {
 					System.out.println("inserite " + righe + "righe");
 				}
+				
+				finish();
 			}
 
 		});
