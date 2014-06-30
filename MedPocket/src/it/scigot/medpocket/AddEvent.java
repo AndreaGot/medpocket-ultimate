@@ -9,6 +9,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -59,6 +60,28 @@ public class AddEvent extends Activity {
 		repeat = (CheckBox) findViewById(R.id.repeat);
 		actv = (AutoCompleteTextView) findViewById(R.id.farmaciac);
 		salva = (Button) findViewById(R.id.salva);
+
+		dataInizio.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					String[] part = null;
+					String stringa = dataInizio.getText().toString();
+					if (stringa.indexOf("/") != -1) {
+						part = stringa.split("/");
+					} else if (stringa.indexOf(".") != -1) {
+						part = stringa.split("\\.");
+					}
+					if (part[0].length() == 1) {
+						part[0] = "0" + part[0];
+					}
+					// scrivi nella textbox
+
+					dataInizio.setText(part[0] + "-" + part[1] + "-" + part[2]);
+				}
+			}
+		});
 
 		repeat.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -137,7 +160,8 @@ public class AddEvent extends Activity {
 				Boolean esito = false;
 				Integer righe = 0;
 				if (repeat.isChecked()) {
-					righe = db.addEvents(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()), giorniRip, giorni.getText().toString().trim(), oreDist.getText().toString().trim());
+					righe = db.addEvents(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()), giorniRip, giorni.getText().toString().trim(), oreDist.getText()
+							.toString().trim());
 				} else {
 					esito = db.addSingleEvent(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()));
 				}
@@ -147,11 +171,11 @@ public class AddEvent extends Activity {
 				} else {
 					Toast.makeText(getApplicationContext(), "ERRORE!", Toast.LENGTH_LONG).show();
 				}
-				
-				if (righe >0) {
+
+				if (righe > 0) {
 					System.out.println("inserite " + righe + "righe");
 				}
-				
+
 				finish();
 			}
 

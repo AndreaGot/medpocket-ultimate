@@ -10,8 +10,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -331,7 +333,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		if (data.indexOf("-") == 1) {
 			data = "0" + data;
 		}
-		String selectQuery = "SELECT  * FROM " + TABELLA_CALENDARIO + " WHERE data LIKE '" + data + "' ";
+		String selectQuery = "SELECT C.nome, C.ora, F.denominazione FROM " + TABELLA_CALENDARIO + " C INNER JOIN " + TABELLA_FARMACI + " F ON C.medicinale = F._id   WHERE data LIKE '" + data + "' ";
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
@@ -339,8 +341,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 			do {
 				evento = new HashMap<String, String>();
-				evento.put("descr", cursor.getString(1));
-				String sotto = cursor.getString(3) + " " + farmaciMap.get(Integer.parseInt(cursor.getString(4)));
+				evento.put("descr", cursor.getString(0));
+				String sotto = cursor.getString(1) + " " + cursor.getString(2);
 				evento.put("sotto", sotto);
 				list.add(evento);
 			} while (cursor.moveToNext());
@@ -370,5 +372,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			System.err.println("ERRORE");
 			return false;
 		}
+	}
+
+	public String[] showFarmaco(String descrizione) {
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI + " WHERE denominazione LIKE '%" + descrizione + "%'";
+		this.openDataBaseReadOnly();
+		String[] result = null;
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			result = new String[]{cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)};
+		}
+		cursor.close();
+		myDataBase.close();
+
+		return result;
 	}
 }

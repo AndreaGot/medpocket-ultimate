@@ -18,9 +18,10 @@
     <TextView
         android:id="@+id/num_events_per_day"
         style="@style/calendar_event_style"
-        android:layout_width="15dip"
-        android:layout_height="15dip"
-        android:layout_gravity="right" >
+        android:layout_width="18dip"
+        android:layout_height="18dip"
+        android:layout_gravity="right" 
+        android:textSize="12sp">
     </TextView>
 
 </RelativeLayout>

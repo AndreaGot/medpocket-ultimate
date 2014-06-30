@@ -7,10 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -48,6 +52,7 @@ public class DetailConvertitore extends Activity {
 			}
 		});
 
+
 	}
 
 	@Override
@@ -72,7 +77,30 @@ public class DetailConvertitore extends Activity {
 	public void updateList() {
 		final String[] from = { "descr", "princ" };
 		final int[] toLayoutId = new int[] { android.R.id.text1, android.R.id.text2 };
-		SimpleAdapter adapter = new SimpleAdapter(this, datiFarmaci, android.R.layout.simple_list_item_2, from, toLayoutId);
+		final SimpleAdapter adapter = new SimpleAdapter(this, datiFarmaci, android.R.layout.simple_list_item_2, from, toLayoutId);
 		lstFarmaci.setAdapter(adapter);
+		lstFarmaci.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	        public void onItemClick(AdapterView<?> av, View view, int i, long l) {
+	        	final HashMap<String, String> value = (HashMap<String, String>) adapter.getItem(i);
+	        	String[] dialog = db.showFarmaco(value.get("descr"));
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DetailConvertitore.this);
+
+				// set title
+				alertDialogBuilder.setTitle(dialog[1]);
+
+				// set dialog message
+				alertDialogBuilder.setMessage(Html.fromHtml("<b> Principio attivo:</b> <br><pre>    " + dialog[0] + "</pre><br><b> Ditta: </b><br><pre>    " + dialog[3] + "</pre><br><b> Prezzo: </b><br><pre>    €" + dialog[2] + "</pre>")).setCancelable(true)
+						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+				// create alert dialog
+				AlertDialog alertDialog = alertDialogBuilder.create();
+				// show it
+				alertDialog.show();
+	        }
+	    });
+	
 	}
 }

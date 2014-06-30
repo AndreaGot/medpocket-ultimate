@@ -11,12 +11,12 @@
     <string name="trova">Trova</string>
     <string name="converti">Converti</string>
     <string name="promemoria">Promemoria</string>
-
     <string name="title_activity_detail_armadietto">Armadietto</string>
     <string name="title_activity_detail_convertitore">Convertitore</string>
     <string name="title_activity_detail_promemoria">Promemoria</string>
     <string name="title_activity_detail_trova_farmacie">Trova Farmacie</string>
-    
     <string name="InserisciFarmaco">Inserisci farmaco</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
