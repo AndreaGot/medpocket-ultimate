@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/armadietto_menu"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:gravity="center"
     android:orientation="vertical">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Entra"
         android:id="@+id/button_armadietto"
-        android:layout_gravity="center_horizontal|top" />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Armadietto" />
 
-    <TextView
-        android:id="@+id/textView1"
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/body1" />
+        android:layout_above="@+id/button_armadietto"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="75dp"
+        android:src="@drawable/armadietto_shadow" />
 
-</LinearLayout>
+</RelativeLayout>
