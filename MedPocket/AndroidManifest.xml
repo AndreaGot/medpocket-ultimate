@@ -24,7 +24,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher" >
+        android:icon="@drawable/medpocket_main" 
+        android:label="MedPocket">
         <activity android:name=".AddEvent" >
         </activity>
         <activity android:name=".DetailArmadietto" >
