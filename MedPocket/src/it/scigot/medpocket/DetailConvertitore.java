@@ -5,12 +5,16 @@ import it.scigot.DB.Farmaci_a;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +32,6 @@ public class DetailConvertitore extends Activity {
 
 	EditText txtFarmaci = null;
 	ListView lstFarmaci = null;
-	Button btnVai = null;
 	ArrayList<Farmaci_a> result_farmaci = null;
 	ArrayList<HashMap<String, String>> datiFarmaci = null;
 	DataBaseHelper db = null;
@@ -37,22 +40,42 @@ public class DetailConvertitore extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_convertitore);
-        setTitle("Convertitore Farmaci");
+		setTitle("Convertitore Farmaci");
 		txtFarmaci = (EditText) findViewById(R.id.txtFarmaci);
 		lstFarmaci = (ListView) findViewById(R.id.lstFarmaci);
-		btnVai = (Button) findViewById(R.id.btnVai);
 
 		db = new DataBaseHelper(this);
 
-		btnVai.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				String value = txtFarmaci.getText().toString();
-				datiFarmaci = db.getAllFarmaciWhere("denominazione", value);
-				updateList();
+		txtFarmaci.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			private Timer timer = new Timer();
+			private final long DELAY = 500; // in ms
+
+			@Override
+			public void afterTextChanged(final Editable s) {
+				timer.cancel();
+				timer = new Timer();
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						DetailConvertitore.this.runOnUiThread(new Runnable() {
+							public void run() {
+								String value = txtFarmaci.getText().toString();
+								datiFarmaci = db.getAllFarmaciWhere("denominazione", value);
+								updateList();
+							}
+						});
+					}
+				}, DELAY);
 			}
 		});
-
-
 	}
 
 	@Override
@@ -80,17 +103,17 @@ public class DetailConvertitore extends Activity {
 		final SimpleAdapter adapter = new SimpleAdapter(this, datiFarmaci, android.R.layout.simple_list_item_2, from, toLayoutId);
 		lstFarmaci.setAdapter(adapter);
 		lstFarmaci.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	        public void onItemClick(AdapterView<?> av, View view, int i, long l) {
-	        	final HashMap<String, String> value = (HashMap<String, String>) adapter.getItem(i);
-	        	String[] dialog = db.showFarmaco(value.get("descr"));
+			public void onItemClick(AdapterView<?> av, View view, int i, long l) {
+				final HashMap<String, String> value = (HashMap<String, String>) adapter.getItem(i);
+				String[] dialog = db.showFarmaco(value.get("descr"));
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DetailConvertitore.this);
 
 				// set title
 				alertDialogBuilder.setTitle(dialog[1]);
 
 				// set dialog message
-				alertDialogBuilder.setMessage(Html.fromHtml("<b> Principio attivo:</b> <br><pre>    " + dialog[0] + "</pre><br><b> Ditta: </b><br><pre>    " + dialog[3] + "</pre><br><b> Prezzo: </b><br><pre>    €" + dialog[2] + "</pre>")).setCancelable(true)
-						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				alertDialogBuilder.setMessage(Html.fromHtml("<b> Principio attivo:</b> <br><pre>    " + dialog[0] + "</pre><br><b> Ditta: </b><br><pre>    " + dialog[3] + "</pre><br><b> Prezzo: </b><br><pre>    €" + dialog[2] + "</pre>"))
+						.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
 							}
@@ -99,8 +122,8 @@ public class DetailConvertitore extends Activity {
 				AlertDialog alertDialog = alertDialogBuilder.create();
 				// show it
 				alertDialog.show();
-	        }
-	    });
-	
+			}
+		});
+
 	}
 }

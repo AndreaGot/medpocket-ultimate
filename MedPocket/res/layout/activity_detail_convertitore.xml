@@ -23,14 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/lstFarmaci"
+        android:layout_alignRight="@+id/lstFarmaci"
         android:ems="10"
         android:hint="@string/InserisciFarmaco" />
-
-    <Button
-        android:id="@+id/btnVai"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="Vai" />
 
 </RelativeLayout>

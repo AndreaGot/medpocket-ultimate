@@ -54,6 +54,8 @@
             android:value="@integer/google_play_services_version" />
 
         <uses-library android:name="com.google.android.maps" />
+        <service android:name=".NotifyService"></service>
+        <service android:name=".ScheduleService"></service>
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package it.scigot.DB;
 
+import it.scigot.medpocket.ScheduleClient;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +31,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	private final static String TABELLA_FARMACI = "farmaci_a";
 	private final static String TABELLA_FARMACIE = "farmacie_trento";
 	private final static String TABELLA_CALENDARIO = "evento";
-	private SQLiteDatabase myDataBase;
+	public SQLiteDatabase myDataBase;
 	private final Context myContext;
 
 	/**
@@ -230,72 +232,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-	public boolean addSingleEvent(String nome, String data, String ora, Integer idMedicina) {
-		openDataBaseReadWrite();
-		ContentValues insertValues = new ContentValues();
-		insertValues.put("nome", nome);
-		insertValues.put("data", data);
-		insertValues.put("ora", ora);
-		insertValues.put("medicinale", idMedicina);
-		if (myDataBase.insert("Evento", null, insertValues) != -1) {
-			System.out.println("INSERITO");
-			myDataBase.close();
-			return true;
-		} else {
-			System.err.println("ERRORE");
-			myDataBase.close();
-			return false;
-		}
 
-	}
-
-	public Integer addEvents(String nome, String data, String ora, Integer idMedicina, Integer ripetizione, String step, String oreDist) {
-		Integer interval = 0;
-		Calendar cal = setCustomDateAndTime(data, ora);
-		;
-		Date singleDate = null;
-		String stringDate = "";
-		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-		SimpleDateFormat hf = new SimpleDateFormat("HH:mm");
-		singleDate = cal.getTime();
-		if (ripetizione == 0) {
-			stringDate = df.format(singleDate);
-			String stringHour = hf.format(singleDate);
-			addSingleEvent(nome, stringDate, stringHour, idMedicina);
-			for (Integer i = 0; i < Integer.parseInt(step) - 1; i++) {
-				cal.add(Calendar.HOUR_OF_DAY, Integer.parseInt(oreDist));
-				singleDate = cal.getTime();
-				stringDate = df.format(singleDate);
-				stringHour = hf.format(singleDate);
-				addSingleEvent(nome, stringDate, stringHour, idMedicina);
-			}
-		} else {
-
-			stringDate = df.format(singleDate);
-			addSingleEvent(nome, stringDate, ora, idMedicina);
-			for (Integer i = 0; i < Integer.parseInt(step) - 1; i++) {
-				cal.add(Calendar.DAY_OF_MONTH, ripetizione);
-				singleDate = cal.getTime();
-				stringDate = df.format(singleDate);
-				addSingleEvent(nome, stringDate, ora, idMedicina);
-			}
-
-		}
-		return Integer.parseInt(step);
-	}
-
-	private Calendar setCustomDateAndTime(String data, String ora) {
-		String[] dataPart = data.split("-");
-		String[] oraPart = ora.split(":");
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.YEAR, Integer.parseInt(dataPart[2]));
-		// i mesi vanno ridotti di 1 (0 è gennaio)
-		cal.set(Calendar.MONTH, Integer.parseInt(dataPart[1]) - 1);
-		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dataPart[0]));
-		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(oraPart[0]));
-		cal.set(Calendar.MINUTE, Integer.parseInt(oraPart[1]));
-		return cal;
-	}
 
 	public HashMap<String, Integer> findEventsByMonth(int year, int month) {
 		HashMap<String, Integer> result = new HashMap<String, Integer>();

@@ -2,11 +2,15 @@ package it.scigot.medpocket;
 
 import it.scigot.DB.DataBaseHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -38,6 +42,8 @@ public class AddEvent extends Activity {
 	private Spinner ripetizione = null;
 	private Button salva = null;
 
+	private ScheduleClient scheduleClient;
+
 	private Integer giorniRip = 0;
 
 	@Override
@@ -61,10 +67,16 @@ public class AddEvent extends Activity {
 		actv = (AutoCompleteTextView) findViewById(R.id.farmaciac);
 		salva = (Button) findViewById(R.id.salva);
 
+		scheduleClient = new ScheduleClient(this);
+		scheduleClient.doBindService();
+		dataInizio.setText("05-07-2014");
 		dataInizio.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
+				if (null == dataInizio.getText() || "".equals(dataInizio.getText()) || dataInizio.getText().toString().indexOf("-") != -1) {
+					return;
+				}
 				if (!hasFocus) {
 					String[] part = null;
 					String stringa = dataInizio.getText().toString();
@@ -160,10 +172,14 @@ public class AddEvent extends Activity {
 				Boolean esito = false;
 				Integer righe = 0;
 				if (repeat.isChecked()) {
-					righe = db.addEvents(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()), giorniRip, giorni.getText().toString().trim(), oreDist.getText()
+					righe = addEvents(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()), giorniRip, giorni.getText().toString().trim(), oreDist.getText()
 							.toString().trim());
 				} else {
-					esito = db.addSingleEvent(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()));
+					Calendar c = setCustomDateAndTime(dataInizio.getText().toString(), ora.getText().toString());
+					scheduleClient.setAlarmForNotification(c);
+					System.err.println("Allarme inserito");
+					scheduleClient.doUnbindService();
+					esito = addSingleEvent(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()));
 				}
 
 				if (esito || righe > 0) {
@@ -182,4 +198,74 @@ public class AddEvent extends Activity {
 		});
 
 	}
+	
+	private Integer addEvents(String nome, String data, String ora, Integer idMedicina, Integer ripetizione, String step, String oreDist ) {
+		Integer interval = 0;
+		Calendar cal = setCustomDateAndTime(data, ora);
+		;
+		Date singleDate = null;
+		String stringDate = "";
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat hf = new SimpleDateFormat("HH:mm");
+		singleDate = cal.getTime();
+		if (ripetizione == 0) {
+			stringDate = df.format(singleDate);
+			String stringHour = hf.format(singleDate);
+			addSingleEvent(nome, stringDate, stringHour, idMedicina);
+			for (Integer i = 0; i < Integer.parseInt(step) - 1; i++) {
+				cal.add(Calendar.HOUR_OF_DAY, Integer.parseInt(oreDist));
+				singleDate = cal.getTime();
+				stringDate = df.format(singleDate);
+				stringHour = hf.format(singleDate);
+				addSingleEvent(nome, stringDate, stringHour, idMedicina);
+			}
+		} else {
+
+			stringDate = df.format(singleDate);
+			addSingleEvent(nome, stringDate, ora, idMedicina);
+			for (Integer i = 0; i < Integer.parseInt(step) - 1; i++) {
+				cal.add(Calendar.DAY_OF_MONTH, ripetizione);
+				singleDate = cal.getTime();
+				stringDate = df.format(singleDate);
+				addSingleEvent(nome, stringDate, ora, idMedicina);
+			}
+
+		}
+		return Integer.parseInt(step);
+	}
+
+	public boolean addSingleEvent(String nome, String data, String ora, Integer idMedicina) {
+		db.openDataBaseReadWrite();
+		ContentValues insertValues = new ContentValues();
+		insertValues.put("nome", nome);
+		insertValues.put("data", data);
+		insertValues.put("ora", ora);
+		insertValues.put("medicinale", idMedicina);
+		if (db.myDataBase.insert("Evento", null, insertValues) != -1) {
+//			Calendar c = setCustomDateAndTime(data, ora);
+			System.out.println("INSERITI");
+			db.myDataBase.close();
+			return true;
+		} else {
+			System.err.println("ERRORE");
+			db.myDataBase.close();
+			return false;
+		}
+
+	}
+
+	
+	private Calendar setCustomDateAndTime(String data, String ora) {
+		String[] dataPart = data.split("-");
+		String[] oraPart = ora.split(":");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(dataPart[2]));
+		// i mesi vanno ridotti di 1 (0 è gennaio)
+		cal.set(Calendar.MONTH, Integer.parseInt(dataPart[1]) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dataPart[0]));
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(oraPart[0]));
+		cal.set(Calendar.MINUTE, Integer.parseInt(oraPart[1]));
+		return cal;
+	}	
+	
 }
