@@ -9,7 +9,7 @@
     tools:context="it.scigot.medpocket.DetailArmadietto" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/titolo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Armadietto" />
@@ -18,7 +18,7 @@
         android:id="@+id/btnArmadietto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/titolo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="63dp"
         android:text="Button" />

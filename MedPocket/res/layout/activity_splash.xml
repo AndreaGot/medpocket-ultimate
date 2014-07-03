@@ -5,19 +5,24 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
-        android:src="@drawable/logo_principale" />
+        android:layout_marginTop="85dp"
+        android:src="@drawable/medpocket_main" />
+
+    <TextView
+        android:id="@+id/titolo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="98dp"
+        android:gravity="center"
+        android:text="MedPocket"
+        android:textSize="25sp" />
 
 </RelativeLayout>

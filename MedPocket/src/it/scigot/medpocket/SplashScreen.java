@@ -2,10 +2,12 @@ package it.scigot.medpocket;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 public class SplashScreen extends Activity {
 	 
@@ -16,6 +18,9 @@ public class SplashScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        EditText titolo = (EditText) findViewById(R.id.titolo);
+        Typeface font = Typeface.createFromAsset(getAssets(), "Comfortaa-Regular");
+        titolo.setTypeface(font);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
