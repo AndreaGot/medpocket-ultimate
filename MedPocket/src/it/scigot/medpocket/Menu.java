@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class Menu extends FragmentActivity implements ActionBar.TabListener {
 
@@ -145,8 +146,8 @@ public class Menu extends FragmentActivity implements ActionBar.TabListener {
 			}
 			View rootView = inflater.inflate(tabLayout, container, false);
 			if (position == 0) {
-				Button armadiettobutton = (Button) rootView.findViewById(R.id.button_armadietto);
-				armadiettobutton.setOnClickListener(new Button.OnClickListener() {
+				ImageView logoArmadietto = (ImageView) rootView.findViewById(R.id.logo_armadietto);
+				logoArmadietto.setOnClickListener(new Button.OnClickListener() {
 
 					public void onClick(View arg0) {
 						Intent i = new Intent(arg0.getContext(), DetailArmadietto.class);
@@ -156,8 +157,8 @@ public class Menu extends FragmentActivity implements ActionBar.TabListener {
 
 				});
 			} else if (position == 1) {
-				Button trovaFarmacieButton = (Button) rootView.findViewById(R.id.button_trovafarmacie);
-				trovaFarmacieButton.setOnClickListener(new Button.OnClickListener() {
+				ImageView logoFarmacie = (ImageView) rootView.findViewById(R.id.logo_farmacie);
+				logoFarmacie.setOnClickListener(new Button.OnClickListener() {
 					public void onClick(View arg0) {
 						Intent i = new Intent(arg0.getContext(), DetailTrovaFarmacie.class);
 						startActivity(i);
@@ -165,8 +166,8 @@ public class Menu extends FragmentActivity implements ActionBar.TabListener {
 
 				});
 			} else if (position == 2) {
-				Button convertitoreButton = (Button) rootView.findViewById(R.id.button_convertitore);
-				convertitoreButton.setOnClickListener(new Button.OnClickListener() {
+				ImageView logoConverti = (ImageView) rootView.findViewById(R.id.logo_convertitore);
+				logoConverti.setOnClickListener(new Button.OnClickListener() {
 					public void onClick(View arg0) {
 
 						Intent i = new Intent(arg0.getContext(), DetailConvertitore.class);
@@ -174,8 +175,8 @@ public class Menu extends FragmentActivity implements ActionBar.TabListener {
 					}
 				});
 			} else if (position == 3) {
-				Button promemoriaButton = (Button) rootView.findViewById(R.id.button_promemoria);
-				promemoriaButton.setOnClickListener(new Button.OnClickListener() {
+				ImageView logoPromemoria = (ImageView) rootView.findViewById(R.id.logo_promemoria);
+				logoPromemoria.setOnClickListener(new Button.OnClickListener() {
 
 					public void onClick(View arg0) {
 						Intent i = new Intent(arg0.getContext(), DetailPromemoria.class);

@@ -14,15 +14,12 @@
         android:layout_marginTop="85dp"
         android:src="@drawable/medpocket_main" />
 
-    <TextView
-        android:id="@+id/titolo"
-        android:layout_width="fill_parent"
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="300sp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="98dp"
-        android:gravity="center"
-        android:text="MedPocket"
-        android:textSize="25sp" />
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/medpocket" />
 
 </RelativeLayout>

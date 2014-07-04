@@ -325,4 +325,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 		return result;
 	}
+	
+	public ArrayList<HashMap<String, String>> getAllEventiOnce() {
+		HashMap<String, String> evento = null;
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+		// Select All Query
+		String selectQuery = "SELECT  F.denominazione, Count(*) FROM " + TABELLA_CALENDARIO +  " C INNER JOIN " + TABELLA_FARMACI + " F ON C.medicinale = F._id GROUP BY F.denominazione";
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				evento = new HashMap<String, String>();
+				evento.put("evento", cursor.getString(0));
+				evento.put("numero", "Assunto " + cursor.getString(1) + " volte");
+				list.add(evento);
+			} while (cursor.moveToNext());
+		} else {
+			evento = new HashMap<String, String>();
+			evento.put("evento", "Nessun farmaco trovato!");
+			evento.put("numero", "Per favore, riprova!");
+			list.add(evento);
+		}
+		cursor.close();
+		myDataBase.close();
+		return list;
+	}
 }

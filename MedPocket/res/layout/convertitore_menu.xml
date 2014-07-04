@@ -6,21 +6,22 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_convertitore"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="Convertitore" />
-
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/logo_convertitore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="47dp"
         android:src="@drawable/converter_shadow" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo_convertitore"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37dp"
+        android:src="@drawable/convertitore" />
 
 </RelativeLayout>

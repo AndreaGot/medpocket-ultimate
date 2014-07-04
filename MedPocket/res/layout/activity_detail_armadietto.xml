@@ -8,19 +8,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="it.scigot.medpocket.DetailArmadietto" >
 
-    <TextView
-        android:id="@+id/titolo"
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/lstArmadietto"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Armadietto" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
 
-    <Button
-        android:id="@+id/btnArmadietto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titolo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
-        android:text="Button" />
+    </ListView>
 
 </RelativeLayout>

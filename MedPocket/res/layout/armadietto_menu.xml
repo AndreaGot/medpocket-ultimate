@@ -6,20 +6,21 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_armadietto"
-        android:layout_width="fill_parent"
+    <ImageView
+        android:id="@+id/logo_armadietto"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="Armadietto" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
+        android:src="@drawable/armadietto_shadow" />
 
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="47dp"
-        android:src="@drawable/armadietto_shadow" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/armadietto" />
 
 </RelativeLayout>

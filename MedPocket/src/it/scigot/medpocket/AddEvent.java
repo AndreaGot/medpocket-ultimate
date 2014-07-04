@@ -11,6 +11,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -38,7 +39,6 @@ public class AddEvent extends Activity {
 	private EditText giorni = null;
 	private EditText ora = null;
 	private EditText oreDist = null;
-	private EditText numPastiglie = null;
 	private Spinner ripetizione = null;
 	private Button salva = null;
 
@@ -61,12 +61,19 @@ public class AddEvent extends Activity {
 		giorni = (EditText) findViewById(R.id.giorni);
 		ora = (EditText) findViewById(R.id.ora);
 		oreDist = (EditText) findViewById(R.id.ore);
-		numPastiglie = (EditText) findViewById(R.id.pastiglie);
 		ripetizione = (Spinner) findViewById(R.id.ripetizione);
 		repeat = (CheckBox) findViewById(R.id.repeat);
 		actv = (AutoCompleteTextView) findViewById(R.id.farmaciac);
 		salva = (Button) findViewById(R.id.salva);
 
+		Intent intent = getIntent();
+		if (intent != null) {
+			String strdata = intent.getExtras().getString("provenienza");
+			if (strdata.equals("DetailArmadietto")) {
+				actv.setText(intent.getExtras().getString("medicinale"));
+			}
+		}
+		System.out.println("ciao");
 		scheduleClient = new ScheduleClient(this);
 		scheduleClient.doBindService();
 		dataInizio.setText("05-07-2014");
@@ -101,18 +108,15 @@ public class AddEvent extends Activity {
 				// TODO Auto-generated method stub
 				if (repeat.isChecked()) {
 					ripetizione.setEnabled(true);
-					numPastiglie.setEnabled(true);
 					giorni.setEnabled(true);
 				} else {
 					ripetizione.setEnabled(false);
-					numPastiglie.setEnabled(false);
 					giorni.setEnabled(false);
 				}
 			}
 		});
 
 		ripetizione.setEnabled(false);
-		numPastiglie.setEnabled(false);
 		giorni.setEnabled(false);
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, nomiFarmaci);
@@ -172,8 +176,8 @@ public class AddEvent extends Activity {
 				Boolean esito = false;
 				Integer righe = 0;
 				if (repeat.isChecked()) {
-					righe = addEvents(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()), giorniRip, giorni.getText().toString().trim(), oreDist.getText()
-							.toString().trim());
+					righe = addEvents(nome.getText().toString().trim(), dataInizio.getText().toString(), ora.getText().toString(), mapFarmaci.get(actv.getText().toString()), giorniRip, giorni.getText().toString().trim(), oreDist.getText().toString()
+							.trim());
 				} else {
 					Calendar c = setCustomDateAndTime(dataInizio.getText().toString(), ora.getText().toString());
 					scheduleClient.setAlarmForNotification(c);
@@ -198,8 +202,8 @@ public class AddEvent extends Activity {
 		});
 
 	}
-	
-	private Integer addEvents(String nome, String data, String ora, Integer idMedicina, Integer ripetizione, String step, String oreDist ) {
+
+	private Integer addEvents(String nome, String data, String ora, Integer idMedicina, Integer ripetizione, String step, String oreDist) {
 		Integer interval = 0;
 		Calendar cal = setCustomDateAndTime(data, ora);
 		;
@@ -242,7 +246,7 @@ public class AddEvent extends Activity {
 		insertValues.put("ora", ora);
 		insertValues.put("medicinale", idMedicina);
 		if (db.myDataBase.insert("Evento", null, insertValues) != -1) {
-//			Calendar c = setCustomDateAndTime(data, ora);
+			// Calendar c = setCustomDateAndTime(data, ora);
 			System.out.println("INSERITI");
 			db.myDataBase.close();
 			return true;
@@ -254,7 +258,6 @@ public class AddEvent extends Activity {
 
 	}
 
-	
 	private Calendar setCustomDateAndTime(String data, String ora) {
 		String[] dataPart = data.split("-");
 		String[] oraPart = ora.split(":");
@@ -266,6 +269,6 @@ public class AddEvent extends Activity {
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(oraPart[0]));
 		cal.set(Calendar.MINUTE, Integer.parseInt(oraPart[1]));
 		return cal;
-	}	
-	
+	}
+
 }

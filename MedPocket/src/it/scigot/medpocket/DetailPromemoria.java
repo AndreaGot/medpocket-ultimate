@@ -371,7 +371,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 						public void onClick(DialogInterface dialog, int id) {
 
 							db.deleteEvent(date_month_year, value.get("sotto"));
-							System.out.println("ciao");
+
 						}
 					}).setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
