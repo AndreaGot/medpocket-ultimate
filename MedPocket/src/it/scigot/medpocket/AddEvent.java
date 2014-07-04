@@ -68,9 +68,10 @@ public class AddEvent extends Activity {
 
 		Intent intent = getIntent();
 		if (intent != null) {
-			String strdata = intent.getExtras().getString("provenienza");
-			if (strdata.equals("DetailArmadietto")) {
-				actv.setText(intent.getExtras().getString("medicinale"));
+			if (intent.hasExtra("provenienza")) {
+				if (intent.getExtras().getString("provenienza").equals("DetailArmadietto")) {
+					actv.setText(intent.getExtras().getString("medicinale"));
+				}
 			}
 		}
 		System.out.println("ciao");
