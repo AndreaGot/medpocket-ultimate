@@ -387,7 +387,6 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 			});
 			builderSingle.show();
 
-			onCreate(null);
 		}
 
 		public int getCurrentDayOfMonth() {
