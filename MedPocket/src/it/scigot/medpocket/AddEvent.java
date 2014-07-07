@@ -74,15 +74,17 @@ public class AddEvent extends Activity {
 				}
 			}
 		}
-		System.out.println("ciao");
 		scheduleClient = new ScheduleClient(this);
 		scheduleClient.doBindService();
-		dataInizio.setText("05-07-2014");
-		dataInizio.setOnFocusChangeListener(new OnFocusChangeListener() {
 
+		dataInizio.setText(dataOdierna());
+
+		dataInizio.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (null == dataInizio.getText() || "".equals(dataInizio.getText()) || dataInizio.getText().toString().indexOf("-") != -1) {
+				
+				if (null == dataInizio.getText().toString() || "".equals(dataInizio.getText().toString()) || dataInizio.getText().toString().indexOf("-") != -1) {
+					
 					return;
 				}
 				if (!hasFocus) {
@@ -174,6 +176,18 @@ public class AddEvent extends Activity {
 
 			@Override
 			public void onClick(View v) {
+
+				if ("".equals(nome.getText().toString()) || "".equals(dataInizio.getText().toString()) || "".equals(ora.getText().toString()) || "".equals(actv.getText().toString()) ||
+						null == nome.getText().toString() || null == dataInizio.getText().toString() || null == ora.getText().toString() || null == actv.getText().toString()) {
+					Toast.makeText(getApplicationContext(), "Controlla i dati inseriti", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if (repeat.isChecked() && ("".equals(giorni.getText().toString()) || "".equals(oreDist.getText().toString())
+						|| null == giorni.getText().toString() || null == oreDist.getText().toString())) {
+					Toast.makeText(getApplicationContext(), "Controlla i dati inseriti", Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				Boolean esito = false;
 				Integer righe = 0;
 				if (repeat.isChecked()) {
@@ -270,6 +284,24 @@ public class AddEvent extends Activity {
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(oraPart[0]));
 		cal.set(Calendar.MINUTE, Integer.parseInt(oraPart[1]));
 		return cal;
+	}
+	
+	private String dataOdierna() {
+		Calendar c = Calendar.getInstance();
+		String day = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+
+		if (day.length() == 1) {
+			day = "0" + day;
+		}
+
+		String month = String.valueOf(c.get(Calendar.MONTH) + 1);
+
+		if (month.length() == 1) {
+			month = "0" + month;
+		}
+
+		String year = String.valueOf(c.get(Calendar.YEAR));
+		return day + "-" + month + "-" + year;
 	}
 
 }
