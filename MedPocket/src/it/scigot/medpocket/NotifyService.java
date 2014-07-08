@@ -31,7 +31,9 @@ public class NotifyService extends Service {
     }
  
     // Unique id to identify the notification.
-    private static final int NOTIFICATION = 123;
+    //TODO: inserire un id di notifica dinamico 
+    //FIXME: verificare se la modifica funziona. Se non va, sostirtuire 123 alla riga qui sotto
+    private static final int NOTIFICATION = Integer.parseInt(System.currentTimeMillis());
     // Name of an intent extra we can use to identify if this service was started to create a notification  
     public static final String INTENT_NOTIFY = "com.blundell.tut.service.INTENT_NOTIFY";
     // The system notification manager
