@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="47dp"
-        android:src="@drawable/calendario_shadow_2" />
+        android:src="@drawable/promemoria_logo" />
 
     <ImageView
         android:id="@+id/imageView1"
