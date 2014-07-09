@@ -351,4 +351,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myDataBase.close();
 		return list;
 	}
+	
+	
+	
+	
+	
+	public HashMap<Integer,HashMap<String, String>> getCoordinate() {
+		HashMap<Integer,HashMap<String, String>> coordinate = new HashMap<Integer,HashMap<String, String>>();
+		HashMap<String,String> longilat=new HashMap<String,String>();
+		String selectQuery = "SELECT  _id,latitudine,longitudine FROM " + TABELLA_FARMACIE;
+		this.openDataBaseReadOnly();
+		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				longilat.put(cursor.getString(6), cursor.getString(7));
+				coordinate.put(cursor.getInt(0),longilat);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		myDataBase.close();
+		return coordinate;
+	}
+	
+	
 }
