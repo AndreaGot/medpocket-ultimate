@@ -1,38 +1,92 @@
 package it.scigot.medpocket;
 
-import android.content.Context;
+import android.content.Intent;
+import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DetailTrovaFarmacie extends FragmentActivity {
+public class DetailTrovaFarmacie extends FragmentActivity implements
+		LocationListener {
 
 	private GoogleMap mMap;
+	private String provider;
+	private LocationManager locationManager;
+	Marker startPerc = null;
+
 	static final LatLng PERTH = new LatLng(-31.90, 115.86);
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_trova_farmacie);
 		setUpMapIfNeeded();
 
-		
-		 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PERTH, 10));	
-		
+		LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+		boolean enabled = service
+				.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+		// check if enabled and if not send user to the GSP settings
+		// Better solution would be to display a dialog and suggesting to
+		// go to the settings
+		if (!enabled) {
+			Intent intent = new Intent(
+					android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			startActivity(intent);
+		}
+
+		// Define the criteria how to select the locatioin provider -> use
+		// default
+		Criteria criteria = new Criteria();
+		provider = service.getBestProvider(criteria, false);
+		Location location = service.getLastKnownLocation(provider);
+
+		// Initialize the location fields
+		if (location != null) {
+			System.out.println("Provider " + provider + " has been selected.");
+			onLocationChanged(location);
+			
+		} else {
+			 
+		}	
+
+	}
+
+	public void onLocationChanged(Location loc) {
+
+		double lat = loc.getLatitude();
+		double lng = loc.getLongitude();
+
+		LatLng coordinate = new LatLng(lat, lng);
+
+		startPerc = mMap.addMarker(new MarkerOptions()
+				.position(coordinate)
+				.title("Current Location")
+				.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		setUpMapIfNeeded();
+
+		// locationManager.requestLocationUpdates(provider, (long)400, (float)1,
+		// (android.location.LocationListener) this );
 	}
 
 	private void setUpMapIfNeeded() {
@@ -66,18 +120,6 @@ public class DetailTrovaFarmacie extends FragmentActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	public void get_coordinates() { // TODO: inserire al posto di void LatLng e
-									// ritornare centerpoint
-
-		LocationManager mymanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-		Location location = mymanager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-		// LatLng center_point = new LatLng(lat, longi);
-		// return center_point;
 	}
 
 }
