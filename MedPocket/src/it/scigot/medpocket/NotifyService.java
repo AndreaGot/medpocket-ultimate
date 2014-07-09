@@ -37,10 +37,9 @@ public class NotifyService extends Service {
     //FIXME: verificare se la modifica funziona. Se non va, sostirtuire 123 alla riga qui sotto
     
     static Random r = new Random();
-    static int i1 = r.nextInt(10)+1;
     
    // private static final int NOTIFICATION = Integer.parseInt(System.currentTimeMillis());
-    private static final int NOTIFICATION = i1;
+    //private static final int NOTIFICATION =  r.nextInt(10)+1;
     // Name of an intent extra we can use to identify if this service was started to create a notification  
     public static final String INTENT_NOTIFY = "com.blundell.tut.service.INTENT_NOTIFY";
     // The system notification manager
@@ -97,7 +96,7 @@ public class NotifyService extends Service {
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
          
         // Send the notification to the system.
-        mNM.notify(NOTIFICATION, notification);
+        mNM.notify(r.nextInt(10)+1, notification);
          
         // Stop the service when we are finished
         stopSelf();
