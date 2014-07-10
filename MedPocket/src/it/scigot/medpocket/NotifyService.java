@@ -39,7 +39,7 @@ public class NotifyService extends Service {
     static Random r = new Random();
     
    // private static final int NOTIFICATION = Integer.parseInt(System.currentTimeMillis());
-    //private static final int NOTIFICATION =  r.nextInt(10)+1;
+    private static final int NOTIFICATION =  123;
     // Name of an intent extra we can use to identify if this service was started to create a notification  
     public static final String INTENT_NOTIFY = "com.blundell.tut.service.INTENT_NOTIFY";
     // The system notification manager
@@ -80,7 +80,7 @@ public class NotifyService extends Service {
         // This is the icon to use on the notification
         int icon = R.drawable.medpocket_main;
         // This is the scrolling text of the notification
-        CharSequence text = "Hai un farmaco in attesa di assunzione! Clicca e vedi quale";       
+        CharSequence text = "Hai un farmaco in attesa di assunzione! Clicca e vedi quale!";       
         // What time to show on the notification
         long time = System.currentTimeMillis();
          
@@ -96,7 +96,7 @@ public class NotifyService extends Service {
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
          
         // Send the notification to the system.
-        mNM.notify(r.nextInt(10)+1, notification);
+        mNM.notify(NOTIFICATION, notification);
          
         // Stop the service when we are finished
         stopSelf();
