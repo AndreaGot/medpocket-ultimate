@@ -2,6 +2,7 @@ package it.scigot.medpocket;
 
 import it.scigot.DB.DataBaseHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -31,9 +32,10 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 	private LocationManager locationManager;
 	Marker startPerc = null;
 	DataBaseHelper db = null;
-	HashMap<Integer,HashMap<String, String>> coordinate = null;
+	 ArrayList<Marker> coordinate = null;
 
 	static final LatLng TRENTO = new LatLng(46.0793, 11.1302);
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,23 +70,14 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 		} else {
 			db = new DataBaseHelper(this);
 
-			coordinate = db.getCoordinate();
+			db.getCoordinate(mMap);
 			
-			Iterator<Integer> keySetIterator = coordinate.keySet().iterator();
-
-			while(keySetIterator.hasNext()){
-			  Integer key = keySetIterator.next();
-			 HashMap<String,String> prova=coordinate.get(key);
+		
 			
-			 //LatLng lol = convertiCoordinate;
+			 //LatLng lol = convertiCoordinate(prova,key);
 			
 			}
-			
-			startPerc = mMap.addMarker(new MarkerOptions()
-			//.position(coordinate)
-			.title("Farmacia")
-			.icon(BitmapDescriptorFactory
-					.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
 			
 			
 			
@@ -92,6 +85,13 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(TRENTO, 10.5f));
 		}
 
+
+	
+	public LatLng convertiCoordinate(HashMap<String,String> convertita,Integer key){
+		
+		String value=convertita.get(key);
+		String[] latPart= value.split(",");
+		return new LatLng(1.0, 1.0);
 	}
 
 	public void onLocationChanged(Location loc) {

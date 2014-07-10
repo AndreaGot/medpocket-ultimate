@@ -1,26 +1,23 @@
 package it.scigot.DB;
 
-import it.scigot.medpocket.ScheduleClient;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
-import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 @SuppressWarnings("unused")
 public class DataBaseHelper extends SQLiteOpenHelper {
@@ -33,6 +30,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	private final static String TABELLA_CALENDARIO = "evento";
 	public SQLiteDatabase myDataBase;
 	private final Context myContext;
+	private final static double DIVISORE = 10000000000000.0;
 
 	/**
 	 * Constructor Takes and keeps a reference of the passed context in order to
@@ -48,13 +46,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	public void openDataBaseReadOnly() throws SQLException {
 		// Open the database
 		String myPath = DB_PATH + DB_NAME;
-		myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+		myDataBase = SQLiteDatabase.openDatabase(myPath, null,
+				SQLiteDatabase.OPEN_READONLY);
 	}
 
 	public void openDataBaseReadWrite() throws SQLException {
 		// Open the database
 		String myPath = DB_PATH + DB_NAME;
-		myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+		myDataBase = SQLiteDatabase.openDatabase(myPath, null,
+				SQLiteDatabase.OPEN_READWRITE);
 	}
 
 	@Override
@@ -109,7 +109,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase checkDB = null;
 		try {
 			String myPath = DB_PATH + DB_NAME;
-			checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+			checkDB = SQLiteDatabase.openDatabase(myPath, null,
+					SQLiteDatabase.OPEN_READONLY);
 
 		} catch (SQLiteException e) {
 			// database does't exist yet.
@@ -145,11 +146,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myInput.close();
 	}
 
-	public ArrayList<HashMap<String, String>> getAllFarmaciWhere(String campo, String valore) {
+	public ArrayList<HashMap<String, String>> getAllFarmaciWhere(String campo,
+			String valore) {
 		HashMap<String, String> farmaco = null;
-		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(
+				2);
 		// Select All Query
-		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI + " WHERE denominazione LIKE '%" + valore + "%' OR principio_attivo LIKE '%" + valore + "%' ";
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI
+				+ " WHERE denominazione LIKE '%" + valore
+				+ "%' OR principio_attivo LIKE '%" + valore + "%' ";
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
@@ -219,7 +224,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 
 	public Integer getNomiFarmaci(String nome) {
-		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI + " WHERE denominazione LIKE '%" + nome + "%'";
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI
+				+ " WHERE denominazione LIKE '%" + nome + "%'";
 		Integer result = -1;
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
@@ -232,8 +238,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-
-
 	public HashMap<String, Integer> findEventsByMonth(int year, int month) {
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		String stringMonth = null;
@@ -243,14 +247,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			stringMonth = String.valueOf(month);
 		}
 		String data = "%-" + stringMonth + "-" + String.valueOf(year);
-		String selectQuery = "SELECT * FROM " + TABELLA_CALENDARIO + " WHERE data LIKE '" + data + "'";
+		String selectQuery = "SELECT * FROM " + TABELLA_CALENDARIO
+				+ " WHERE data LIKE '" + data + "'";
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			do {
 				String[] dataPart = cursor.getString(2).split("-");
-				dataPart[0] = dataPart[0].startsWith("0") ? dataPart[0].substring(1) : dataPart[0];
+				dataPart[0] = dataPart[0].startsWith("0") ? dataPart[0]
+						.substring(1) : dataPart[0];
 				if (result.containsKey(dataPart[0])) {
 					result.put(dataPart[0], result.get(dataPart[0]) + 1);
 				} else {
@@ -266,15 +272,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	// Getting All Contacts
 	public ArrayList<HashMap<String, String>> getAllEventiWhere(String data) {
 		HashMap<String, String> evento = null;
-		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(
+				2);
 		if (data.indexOf("-") == 1) {
 			data = "0" + data;
 		}
-		String selectQuery = "SELECT C.nome, C.ora, F.denominazione FROM " + TABELLA_CALENDARIO + " C INNER JOIN " + TABELLA_FARMACI + " F ON C.medicinale = F._id   WHERE data LIKE '" + data + "' ";
+		String selectQuery = "SELECT C.nome, C.ora, F.denominazione FROM "
+				+ TABELLA_CALENDARIO + " C INNER JOIN " + TABELLA_FARMACI
+				+ " F ON C.medicinale = F._id   WHERE data LIKE '" + data
+				+ "' ";
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
-		HashMap<Integer, String> farmaciMap = this.getFarmaciMapWithIntegerKey();
+		HashMap<Integer, String> farmaciMap = this
+				.getFarmaciMapWithIntegerKey();
 		if (cursor.moveToFirst()) {
 			do {
 				evento = new HashMap<String, String>();
@@ -302,7 +313,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		String farmaco = valore.substring(5).trim();
 		Integer idFarmaco = this.getNomiFarmaci(farmaco);
 		openDataBaseReadWrite();
-		if (myDataBase.delete(TABELLA_CALENDARIO, "data " + " LIKE '" + data + "' AND ora LIKE '" + ora + "' AND medicinale=" + String.valueOf(idFarmaco), null) > 0) {
+		if (myDataBase
+				.delete(TABELLA_CALENDARIO, "data " + " LIKE '" + data
+						+ "' AND ora LIKE '" + ora + "' AND medicinale="
+						+ String.valueOf(idFarmaco), null) > 0) {
 			System.out.println("ELIMINATO");
 			return true;
 		} else {
@@ -312,25 +326,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 
 	public String[] showFarmaco(String descrizione) {
-		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI + " WHERE denominazione LIKE '%" + descrizione + "%'";
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI
+				+ " WHERE denominazione LIKE '%" + descrizione + "%'";
 		this.openDataBaseReadOnly();
 		String[] result = null;
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
-			result = new String[]{cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)};
+			result = new String[] { cursor.getString(1), cursor.getString(2),
+					cursor.getString(3), cursor.getString(4) };
 		}
 		cursor.close();
 		myDataBase.close();
 
 		return result;
 	}
-	
+
 	public ArrayList<HashMap<String, String>> getAllEventiOnce() {
 		HashMap<String, String> evento = null;
-		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(
+				2);
 		// Select All Query
-		String selectQuery = "SELECT  F.denominazione, Count(*) FROM " + TABELLA_CALENDARIO +  " C INNER JOIN " + TABELLA_FARMACI + " F ON C.medicinale = F._id GROUP BY F.denominazione";
+		String selectQuery = "SELECT  F.denominazione, Count(*) FROM "
+				+ TABELLA_CALENDARIO + " C INNER JOIN " + TABELLA_FARMACI
+				+ " F ON C.medicinale = F._id GROUP BY F.denominazione";
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
@@ -338,7 +357,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			do {
 				evento = new HashMap<String, String>();
 				evento.put("evento", cursor.getString(0));
-				evento.put("numero", "Assunto " + cursor.getString(1) + " volte");
+				evento.put("numero", "Assunto " + cursor.getString(1)
+						+ " volte");
 				list.add(evento);
 			} while (cursor.moveToNext());
 		} else {
@@ -351,28 +371,32 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myDataBase.close();
 		return list;
 	}
-	
-	
-	
-	
-	
-	public HashMap<Integer,HashMap<String, String>> getCoordinate() {
-		HashMap<Integer,HashMap<String, String>> coordinate = new HashMap<Integer,HashMap<String, String>>();
-		HashMap<String,String> longilat=new HashMap<String,String>();
-		String selectQuery = "SELECT  _id,latitudine,longitudine FROM " + TABELLA_FARMACIE;
+
+	public void getCoordinate(GoogleMap mMap) {
+
+		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACIE;
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			do {
-				longilat.put(cursor.getString(6), cursor.getString(7));
-				coordinate.put(cursor.getInt(0),longilat);
+				double lat = Double.valueOf((cursor.getString(6)).replace(',',
+						'.'));
+				double lat2 = lat / DIVISORE;
+
+				double lng = Double.valueOf((cursor.getString(7)).replace(',',
+						'.'));
+
+				double lng2 = lng / DIVISORE;
+
+				Marker coordinate_marker = mMap.addMarker(new MarkerOptions()
+						.position(new LatLng(lat2, lng2))
+						.title(cursor.getString(2))
+						.snippet(cursor.getString(1)));
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
 		myDataBase.close();
-		return coordinate;
 	}
-	
-	
+
 }
