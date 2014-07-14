@@ -117,7 +117,7 @@ public class DetailConvertitore extends Activity {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
 							}
-						});
+						}).setIcon(R.drawable.medpocket_main);
 				// create alert dialog
 				AlertDialog alertDialog = alertDialogBuilder.create();
 				// show it

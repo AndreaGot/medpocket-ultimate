@@ -347,20 +347,19 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 			final int[] toLayoutId = new int[] { android.R.id.text1, android.R.id.text2 };
 			final SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), datiEvento, android.R.layout.simple_list_item_2, from, toLayoutId);
 
-			builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			builderSingle.setNegativeButton("OK", new DialogInterface.OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
 				}
-			});
+			}).setIcon(R.drawable.medpocket_main);
 
 			builderSingle.setAdapter(adapter, new DialogInterface.OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					final HashMap<String, String> value = (HashMap<String, String>) adapter.getItem(which);
-					System.out.println("ciao");
 					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
 					// set title
@@ -378,7 +377,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 						public void onClick(DialogInterface dialog, int id) {
 							dialog.cancel();
 						}
-					});
+					}).setIcon(R.drawable.medpocket_main);
 					// create alert dialog
 					AlertDialog alertDialog = alertDialogBuilder.create();
 					// show it
