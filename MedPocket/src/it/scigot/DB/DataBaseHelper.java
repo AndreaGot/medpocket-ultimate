@@ -30,7 +30,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	private final static String TABELLA_CALENDARIO = "evento";
 	public SQLiteDatabase myDataBase;
 	private final Context myContext;
-	private final static double DIVISORE = 10000000000000.0;
+
+	// private final static double DIVISORE = 10000000000000.0;
 
 	/**
 	 * Constructor Takes and keeps a reference of the passed context in order to
@@ -373,21 +374,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 
 	public void getCoordinate(GoogleMap mMap) {
-
+		double divisore = 0.0;
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACIE;
 		this.openDataBaseReadOnly();
 		Cursor cursor = myDataBase.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			do {
-				double lat = Double.valueOf((cursor.getString(6)).replace(',',
-						'.'));
-				double lat2 = lat / DIVISORE;
+
+				String latString = cursor.getString(6);
+				String lngString = cursor.getString(7);
+
+				if (latString.indexOf("+") == -1
+						|| lngString.indexOf("+") == -1) {
+					continue;
+				}
+				
+				
+				double lat = Double.valueOf((latString).replace(',', '.'));
+				divisore = Math.pow(10.0,(Double.valueOf(latString.substring(latString.length()-2, latString.length()))-1.0));
+
+				double lat2 = lat / divisore;
 
 				double lng = Double.valueOf((cursor.getString(7)).replace(',',
 						'.'));
 
-				double lng2 = lng / DIVISORE;
+				divisore = Math.pow(10.0,(Double.valueOf(lngString.substring(lngString.length()-2, lngString.length()))-1.0));
+				double lng2 = lng / divisore;
 
 				Marker coordinate_marker = mMap.addMarker(new MarkerOptions()
 						.position(new LatLng(lat2, lng2))

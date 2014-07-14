@@ -101,13 +101,9 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 
 		LatLng coordinate = new LatLng(lat, lng);
 
-		startPerc = mMap.addMarker(new MarkerOptions()
-				.position(coordinate)
-				.title("Current Location")
-				.icon(BitmapDescriptorFactory
-						.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+		
 
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18.0f));
+		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 15.0f));
 	}
 
 	@Override
