@@ -24,18 +24,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DetailTrovaFarmacie extends FragmentActivity implements
-		LocationListener {
+public class DetailTrovaFarmacie extends FragmentActivity implements LocationListener {
 
 	private GoogleMap mMap;
 	private String provider;
 	private LocationManager locationManager;
 	Marker startPerc = null;
 	DataBaseHelper db = null;
-	 ArrayList<Marker> coordinate = null;
+	ArrayList<Marker> coordinate = null;
 
 	static final LatLng TRENTO = new LatLng(46.0793, 11.1302);
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,15 +42,13 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 		setUpMapIfNeeded();
 
 		LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
-		boolean enabled = service
-				.isProviderEnabled(LocationManager.GPS_PROVIDER);
+		boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 		// check if enabled and if not send user to the GSP settings
 		// Better solution would be to display a dialog and suggesting to
 		// go to the settings
 		if (!enabled) {
-			Intent intent = new Intent(
-					android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 			startActivity(intent);
 		}
 
@@ -68,29 +64,21 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 			onLocationChanged(location);
 
 		} else {
-			db = new DataBaseHelper(this);
 
-			db.getCoordinate(mMap);
-			
-		
-			
-			 //LatLng lol = convertiCoordinate(prova,key);
-			
-			}
-
-			
-			
-			
-			
+			// LatLng lol = convertiCoordinate(prova,key);
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(TRENTO, 10.5f));
 		}
 
+		db = new DataBaseHelper(this);
 
-	
-	public LatLng convertiCoordinate(HashMap<String,String> convertita,Integer key){
-		
-		String value=convertita.get(key);
-		String[] latPart= value.split(",");
+		db.getCoordinate(mMap);
+
+	}
+
+	public LatLng convertiCoordinate(HashMap<String, String> convertita, Integer key) {
+
+		String value = convertita.get(key);
+		String[] latPart = value.split(",");
 		return new LatLng(1.0, 1.0);
 	}
 
@@ -100,8 +88,6 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 		double lng = loc.getLongitude();
 
 		LatLng coordinate = new LatLng(lat, lng);
-
-		
 
 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 15.0f));
 	}
@@ -119,8 +105,7 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 		if (mMap != null) {
 			return;
 		}
-		mMap = ((SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.map)).getMap();
+		mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		if (mMap == null) {
 			return;
 		}
@@ -148,6 +133,4 @@ public class DetailTrovaFarmacie extends FragmentActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-
-	
 }
