@@ -407,4 +407,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 		}
 	}
 
+	public void onResume() {
+		onCreate(null);
+	}
 }
