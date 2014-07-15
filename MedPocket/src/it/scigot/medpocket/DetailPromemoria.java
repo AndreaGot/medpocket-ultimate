@@ -353,7 +353,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
 				}
-			}).setIcon(R.drawable.medpocket_main);
+			}).setIcon(R.drawable.medpocket_main_dialog);
 
 			builderSingle.setAdapter(adapter, new DialogInterface.OnClickListener() {
 
