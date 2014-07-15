@@ -64,22 +64,12 @@ public class DetailTrovaFarmacie extends FragmentActivity implements LocationLis
 			onLocationChanged(location);
 
 		} else {
-
-			// LatLng lol = convertiCoordinate(prova,key);
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(TRENTO, 10.5f));
 		}
 
 		db = new DataBaseHelper(this);
-
 		db.getCoordinate(mMap);
 
-	}
-
-	public LatLng convertiCoordinate(HashMap<String, String> convertita, Integer key) {
-
-		String value = convertita.get(key);
-		String[] latPart = value.split(",");
-		return new LatLng(1.0, 1.0);
 	}
 
 	public void onLocationChanged(Location loc) {

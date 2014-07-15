@@ -26,7 +26,11 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+/**
+ * 
+ * @author Andrea
+ *
+ */
 public class AddEvent extends Activity {
 
 	private DataBaseHelper db = null;
@@ -79,12 +83,14 @@ public class AddEvent extends Activity {
 
 		dataInizio.setText(dataOdierna());
 
+		// Ogni volta che la casella perde il focus controllo se la data è
+		// formattata bene, altrimenti lo faccio
 		dataInizio.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				
+
 				if (null == dataInizio.getText().toString() || "".equals(dataInizio.getText().toString()) || dataInizio.getText().toString().indexOf("-") != -1) {
-					
+
 					return;
 				}
 				if (!hasFocus) {
@@ -105,6 +111,8 @@ public class AddEvent extends Activity {
 			}
 		});
 
+		// Se il repeat ha/non ha il check, abilito o disabilito quello che
+		// serve
 		repeat.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -134,6 +142,9 @@ public class AddEvent extends Activity {
 		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		ripetizione.setAdapter(spinnerAdapter);
+
+		// in base a quello che è selezionato in ripetizione, definisco un
+		// identificatore di periodo
 		ripetizione.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -172,18 +183,18 @@ public class AddEvent extends Activity {
 
 		});
 
+		// sul salva, controllo se il contenuto dei vari campi è corretto.
 		salva.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				if ("".equals(nome.getText().toString()) || "".equals(dataInizio.getText().toString()) || "".equals(ora.getText().toString()) || "".equals(actv.getText().toString()) ||
-						null == nome.getText().toString() || null == dataInizio.getText().toString() || null == ora.getText().toString() || null == actv.getText().toString()) {
+				if ("".equals(nome.getText().toString()) || "".equals(dataInizio.getText().toString()) || "".equals(ora.getText().toString()) || "".equals(actv.getText().toString()) || null == nome.getText().toString()
+						|| null == dataInizio.getText().toString() || null == ora.getText().toString() || null == actv.getText().toString()) {
 					Toast.makeText(getApplicationContext(), "Controlla i dati inseriti", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				if (repeat.isChecked() && ("".equals(giorni.getText().toString()) || "".equals(oreDist.getText().toString())
-						|| null == giorni.getText().toString() || null == oreDist.getText().toString())) {
+				if (repeat.isChecked() && ("".equals(giorni.getText().toString()) || "".equals(oreDist.getText().toString()) || null == giorni.getText().toString() || null == oreDist.getText().toString())) {
 					Toast.makeText(getApplicationContext(), "Controlla i dati inseriti", Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -218,6 +229,8 @@ public class AddEvent extends Activity {
 
 	}
 
+	// Serve per salvare gli eventi. Inserito nell'AddEvent per ovviare il
+	// problema dato dal set della notification, che altrimenrti non funziona
 	private Integer addEvents(String nome, String data, String ora, Integer idMedicina, Integer ripetizione, String step, String oreDist) {
 		Integer interval = 0;
 		Calendar cal = setCustomDateAndTime(data, ora);
@@ -285,7 +298,7 @@ public class AddEvent extends Activity {
 		cal.set(Calendar.MINUTE, Integer.parseInt(oraPart[1]));
 		return cal;
 	}
-	
+
 	private String dataOdierna() {
 		Calendar c = Calendar.getInstance();
 		String day = String.valueOf(c.get(Calendar.DAY_OF_MONTH));

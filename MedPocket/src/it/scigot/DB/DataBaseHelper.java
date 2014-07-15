@@ -74,7 +74,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	}
 
-	// TODO: i seguenti metodi sono utilizzati solo all'inizio
+	// i seguenti metodi sono utilizzati solo all'inizio
 	// dell'applicazione, per vedere se il database esiste, e quindi copiarlo se
 	// non c'è
 	// Valutare l'idea di renderli statici, in modo da non dover necessariamente
@@ -96,12 +96,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	/**
-	 * Check if the database already exist to avoid re-copying the file each
-	 * time you open the application.
-	 * 
-	 * @return true if it exists, false if it doesn't
-	 */
 	private boolean checkDataBase() {
 		SQLiteDatabase checkDB = null;
 		try {
@@ -142,7 +136,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myOutput.close();
 		myInput.close();
 	}
+	
+	
+	//-------------------
+	// INIZIO DELLE QUERY
+	//-------------------
+	
 
+	// Utilizzato nel convertitore per ottenere la lista di farmaci e principio attivo
 	public ArrayList<HashMap<String, String>> getAllFarmaciWhere(String campo,
 			String valore) {
 		HashMap<String, String> farmaco = null;
@@ -173,6 +174,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return list;
 	}
 
+	
+	//Utilizzato nell'AddEvent per mappare i farmaci inseriti nella casella di testo 
 	public HashMap<String, Integer> getFarmaciMap() {
 		HashMap<String, Integer> farmaci = new HashMap<String, Integer>();
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI;
@@ -188,6 +191,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myDataBase.close();
 		return farmaci;
 	}
+	
 
 	public HashMap<Integer, String> getFarmaciMapWithIntegerKey() {
 		HashMap<Integer, String> farmaci = new HashMap<Integer, String>();
@@ -205,6 +209,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return farmaci;
 	}
 
+	// utilizzata in AddEvent per l'autocompletamento della casella di testo
 	public ArrayList<String> getNomiFarmaci() {
 		ArrayList<String> farmaci = new ArrayList<String>();
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI;
@@ -219,6 +224,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		cursor.close();
 		return farmaci;
 	}
+
 
 	public Integer getNomiFarmaci(String nome) {
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI
@@ -235,6 +241,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
+	
+	//Utilizzato nel Promemoria per ottenere gli eventi in un dato mese
 	public HashMap<String, Integer> findEventsByMonth(int year, int month) {
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		String stringMonth = null;
@@ -302,6 +310,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return list;
 	}
 
+	//Utilizzato nel Promemoria per cancellare un evento 
 	public Boolean deleteEvent(String data, String valore) {
 		String ora = valore.substring(0, 5);
 		if (data.indexOf("-") == 1) {
@@ -322,6 +331,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	// Utilizzato nel Convertitore, nella dialog di selezione del farmaco, dove sono listati produttore e prezzo
 	public String[] showFarmaco(String descrizione) {
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACI
 				+ " WHERE denominazione LIKE '%" + descrizione + "%'";
@@ -339,6 +349,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
+	// Utilizzato nell'armadietto per ottenere tutti i farmaci utilizzati, ma una volta sola per ogni medicinale
 	public ArrayList<HashMap<String, String>> getAllEventiOnce() {
 		HashMap<String, String> evento = null;
 		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(
@@ -368,7 +379,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myDataBase.close();
 		return list;
 	}
-
+	
+	//Utilizzato nel trova farmacie per localizzare i vari marker
 	public void getCoordinate(GoogleMap mMap) {
 		double divisore = 0.0;
 		String selectQuery = "SELECT  * FROM " + TABELLA_FARMACIE;

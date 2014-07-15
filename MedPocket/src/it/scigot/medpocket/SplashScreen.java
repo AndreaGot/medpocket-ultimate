@@ -9,6 +9,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+/**
+ * 
+ * @author Andrea
+ *
+ */
+
 public class SplashScreen extends Activity {
 	 
     // Splash screen timer

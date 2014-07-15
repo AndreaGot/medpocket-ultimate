@@ -23,7 +23,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-
+/**
+ * 
+ * @author Andrea
+ *
+ */
 public class DetailConvertitore extends Activity {
 
 	// TODO: valutare se è possibile effettuare le query in base alla scrittura
@@ -58,6 +62,8 @@ public class DetailConvertitore extends Activity {
 			private Timer timer = new Timer();
 			private final long DELAY = 500; // in ms
 
+			
+			//Aspetto 500 ms prima di procedere con la ricerca. Così si evita di lanciare il metodo ad ogni lettera premuta
 			@Override
 			public void afterTextChanged(final Editable s) {
 				timer.cancel();
@@ -96,6 +102,8 @@ public class DetailConvertitore extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	//aggiorna la lista in base ai farmaci risultanti dal convertitore
 
 	public void updateList() {
 		final String[] from = { "descr", "princ" };

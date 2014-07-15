@@ -34,6 +34,11 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author Andrea
+ *
+ */
 public class DetailPromemoria extends Activity implements OnClickListener {
 
 	private TextView currentMonth;
@@ -45,9 +50,7 @@ public class DetailPromemoria extends Activity implements OnClickListener {
 	private GridView calendarView;
 	private GridCellAdapter adapter;
 	private Calendar _calendar;
-	@SuppressLint("NewApi")
 	private int month, year;
-	@SuppressLint({ "NewApi", "NewApi", "NewApi", "NewApi" })
 	private final DateFormat dateFormatter = new DateFormat();
 	private static final String dateTemplate = "MMMM yyyy";
 	final Context context = this;
