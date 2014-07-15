@@ -87,10 +87,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	public void createDataBase() throws IOException {
 		boolean dbExist = checkDataBase();
 		if (!dbExist) {
-			// By calling this method and empty database will be created into
-			// the default system path
-			// of your application so we are gonna be able to overwrite that
-			// database with our database.
 			this.getReadableDatabase();
 			try {
 				copyDataBase();
