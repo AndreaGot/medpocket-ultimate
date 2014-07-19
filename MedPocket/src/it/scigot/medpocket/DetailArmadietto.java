@@ -18,7 +18,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-
+/**
+ * In questa classe vengono visualizzati tutti gli eventi in corso presenti sull'applicazione, ed è possibile crearne di nuovi.
+ * 
+ * @author Antonio Sciarretta
+ *
+ */
 public class DetailArmadietto extends Activity {
 	
 	ListView eventi = null;

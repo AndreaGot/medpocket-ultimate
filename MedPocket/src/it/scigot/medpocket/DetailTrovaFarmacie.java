@@ -24,6 +24,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * 
+ * In questa classe viene caricata la mappa tramite i servizi di google, viene chiamato un metodo per trovare le coordinate dal DB
+ * e inserire i marker rappresententi le farmacie.
+ * 
+ * @author Sciarretta Antonio
+ *
+ */
 public class DetailTrovaFarmacie extends FragmentActivity implements LocationListener {
 
 	private GoogleMap mMap;

@@ -30,10 +30,6 @@ import android.widget.SimpleAdapter;
  */
 public class DetailConvertitore extends Activity {
 
-	// TODO: valutare se è possibile effettuare le query in base alla scrittura
-	// dell'utente. Se si fanno con textchanged listener sulla EditText diventa
-	// inutilizzabile.
-
 	EditText txtFarmaci = null;
 	ListView lstFarmaci = null;
 	ArrayList<Farmaci_a> result_farmaci = null;
